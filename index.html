@@ -27,14 +27,14 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 #mobile-menu a{display:block;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
 #mobile-menu a:last-child{border-bottom:none}
 .hero{height:100vh;background:var(--blue);position:relative;overflow:hidden;display:flex;align-items:center}
-/* Grid aligned to 60px — matches sheet geometry exactly */
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:60px 60px;background-position:0 0;pointer-events:none}
-.hero-drawing{position:absolute;top:50%;right:0;transform:translateY(-50%);width:64%;z-index:1;pointer-events:none}
-#cnc-svg{width:100%;height:auto}
+/* No CSS grid — grid is drawn inside the SVG so it scales with the sheet */
+.hero-drawing{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:flex-end}
+#cnc-svg{height:100%;width:auto;display:block}
 .sheet-border{fill:none;stroke:rgba(123,179,240,0.22);stroke-width:0.75}
 .corner-h,.corner-v{stroke:rgba(123,179,240,0.5);stroke-width:1}
 .dim-line{stroke:rgba(123,179,240,0.12);stroke-width:0.5}
 .dim-tick{stroke:rgba(123,179,240,0.3);stroke-width:0.75}
+.grid-line{stroke:rgba(255,255,255,0.04);stroke-width:0.5}
 .hero-content-wrap{position:relative;z-index:2;max-width:var(--max);margin:0 auto;width:100%;padding:0 48px}
 .hero-content{max-width:480px}
 .hero-label{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue-light);margin-bottom:20px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(10px);transition:opacity 0.6s ease 0.2s,transform 0.6s ease 0.2s}
@@ -106,7 +106,7 @@ footer{background:#0a0a0a;padding:28px 0}
   #nav-burger{display:flex}
   .hero-content-wrap{padding:0 24px}
   .hero-h1{font-size:52px}
-  .hero-drawing{width:100%;right:0;top:auto;bottom:-5%;transform:none;opacity:0.3}
+  .hero-drawing{opacity:0.3}
   .stats-inner{grid-template-columns:1fr}
   .stat{border-right:none;border-bottom:1px solid var(--line)}
   .stat:last-child{border-bottom:none}
@@ -149,49 +149,87 @@ footer{background:#0a0a0a;padding:28px 0}
 </div>
 
 <section class="hero">
-  <div class="hero-grid"></div>
   <div class="hero-drawing">
     <!--
-      SVG viewBox 1200x600.
-      Grid: 60px squares starting at 0,0.
-      Sheet: x=60,y=60, w=1080, h=480 — corners sit on grid intersections.
-
-      Nesting layout (all measurements in SVG units):
-      ROW1 y=60-180 h=120: 4 rects w=270 each
-      ROW2 y=180-300 h=120: 1 rect w=852 + 2 circles r=57 (dia=114 each, 852+114+114=1080)
-      ROW3 y=300-420 h=120: 3 rects w=322 each + 1 circle r=57 (322*3+114=1080)
-      ROW4 y=420-540 h=120: 2 rects w=540 each
-
-      Circles touch adjacent shapes — no gaps.
-      Cut lines drawn by JS point-tracing with fixed dash grid.
+      SVG viewBox 1200x900 — tall enough to fill viewport height.
+      Grid drawn INSIDE SVG at 60px intervals so it always scales
+      with the sheet. Sheet at x=60,y=120,w=1080,h=480.
+      Grid lines and sheet share the same coordinate space.
     -->
-    <svg id="cnc-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+    <svg id="cnc-svg" viewBox="0 0 1200 900" preserveAspectRatio="xMaxYMid meet" xmlns="http://www.w3.org/2000/svg">
 
-      <!-- Sheet border — corners on 60px grid -->
-      <rect class="sheet-border" x="60" y="60" width="1080" height="480"/>
+      <!-- Grid lines — same 60px spacing as sheet geometry -->
+      <g id="grid-layer">
+        <!-- Vertical lines every 60px from 0 to 1200 -->
+        <line class="grid-line" x1="60"   y1="0" x2="60"   y2="900"/>
+        <line class="grid-line" x1="120"  y1="0" x2="120"  y2="900"/>
+        <line class="grid-line" x1="180"  y1="0" x2="180"  y2="900"/>
+        <line class="grid-line" x1="240"  y1="0" x2="240"  y2="900"/>
+        <line class="grid-line" x1="300"  y1="0" x2="300"  y2="900"/>
+        <line class="grid-line" x1="360"  y1="0" x2="360"  y2="900"/>
+        <line class="grid-line" x1="420"  y1="0" x2="420"  y2="900"/>
+        <line class="grid-line" x1="480"  y1="0" x2="480"  y2="900"/>
+        <line class="grid-line" x1="540"  y1="0" x2="540"  y2="900"/>
+        <line class="grid-line" x1="600"  y1="0" x2="600"  y2="900"/>
+        <line class="grid-line" x1="660"  y1="0" x2="660"  y2="900"/>
+        <line class="grid-line" x1="720"  y1="0" x2="720"  y2="900"/>
+        <line class="grid-line" x1="780"  y1="0" x2="780"  y2="900"/>
+        <line class="grid-line" x1="840"  y1="0" x2="840"  y2="900"/>
+        <line class="grid-line" x1="900"  y1="0" x2="900"  y2="900"/>
+        <line class="grid-line" x1="960"  y1="0" x2="960"  y2="900"/>
+        <line class="grid-line" x1="1020" y1="0" x2="1020" y2="900"/>
+        <line class="grid-line" x1="1080" y1="0" x2="1080" y2="900"/>
+        <line class="grid-line" x1="1140" y1="0" x2="1140" y2="900"/>
+        <!-- Horizontal lines every 60px from 0 to 900 -->
+        <line class="grid-line" x1="0" y1="60"  x2="1200" y2="60"/>
+        <line class="grid-line" x1="0" y1="120" x2="1200" y2="120"/>
+        <line class="grid-line" x1="0" y1="180" x2="1200" y2="180"/>
+        <line class="grid-line" x1="0" y1="240" x2="1200" y2="240"/>
+        <line class="grid-line" x1="0" y1="300" x2="1200" y2="300"/>
+        <line class="grid-line" x1="0" y1="360" x2="1200" y2="360"/>
+        <line class="grid-line" x1="0" y1="420" x2="1200" y2="420"/>
+        <line class="grid-line" x1="0" y1="480" x2="1200" y2="480"/>
+        <line class="grid-line" x1="0" y1="540" x2="1200" y2="540"/>
+        <line class="grid-line" x1="0" y1="600" x2="1200" y2="600"/>
+        <line class="grid-line" x1="0" y1="660" x2="1200" y2="660"/>
+        <line class="grid-line" x1="0" y1="720" x2="1200" y2="720"/>
+        <line class="grid-line" x1="0" y1="780" x2="1200" y2="780"/>
+        <line class="grid-line" x1="0" y1="840" x2="1200" y2="840"/>
+      </g>
 
-      <!-- Corner crosshairs — lines pass through exact corner coords -->
-      <line class="corner-h" x1="42" y1="60"  x2="78" y2="60"/>
-      <line class="corner-v" x1="60" y1="42"  x2="60" y2="78"/>
-      <line class="corner-h" x1="1122" y1="60"  x2="1158" y2="60"/>
-      <line class="corner-v" x1="1140" y1="42"  x2="1140" y2="78"/>
-      <line class="corner-h" x1="42" y1="540" x2="78" y2="540"/>
-      <line class="corner-v" x1="60" y1="522" x2="60" y2="558"/>
-      <line class="corner-h" x1="1122" y1="540" x2="1158" y2="540"/>
-      <line class="corner-v" x1="1140" y1="522" x2="1140" y2="558"/>
+      <!--
+        Sheet: x=60, y=120, w=1080, h=480
+        Corners on 60px grid: (60,120),(1140,120),(60,600),(1140,600)
+        Nesting rows h=120 each:
+        ROW1 y=120-240: 4 rects w=270
+        ROW2 y=240-360: 1 rect w=852 + 2 circles r=57 (852+114+114=1080)
+        ROW3 y=360-480: 3 rects w=322 + 1 circle r=57 (966+114=1080)
+        ROW4 y=480-600: 2 rects w=540
+      -->
+      <rect class="sheet-border" x="60" y="120" width="1080" height="480"/>
+
+      <!-- Corner crosshairs — centred on exact corner coords -->
+      <line class="corner-h" x1="42"  y1="120" x2="78"  y2="120"/>
+      <line class="corner-v" x1="60"  y1="102" x2="60"  y2="138"/>
+      <line class="corner-h" x1="1122" y1="120" x2="1158" y2="120"/>
+      <line class="corner-v" x1="1140" y1="102" x2="1140" y2="138"/>
+      <line class="corner-h" x1="42"  y1="600" x2="78"  y2="600"/>
+      <line class="corner-v" x1="60"  y1="582" x2="60"  y2="618"/>
+      <line class="corner-h" x1="1122" y1="600" x2="1158" y2="600"/>
+      <line class="corner-v" x1="1140" y1="582" x2="1140" y2="618"/>
 
       <!-- Dimension lines -->
-      <line class="dim-line" x1="60"   y1="558" x2="1140" y2="558"/>
-      <line class="dim-tick" x1="60"   y1="552" x2="60"   y2="564"/>
-      <line class="dim-tick" x1="1140" y1="552" x2="1140" y2="564"/>
-      <line class="dim-line" x1="1158" y1="60"  x2="1158" y2="540"/>
-      <line class="dim-tick" x1="1152" y1="60"  x2="1164" y2="60"/>
-      <line class="dim-tick" x1="1152" y1="540" x2="1164" y2="540"/>
+      <line class="dim-line" x1="60"   y1="620" x2="1140" y2="620"/>
+      <line class="dim-tick" x1="60"   y1="614" x2="60"   y2="626"/>
+      <line class="dim-tick" x1="1140" y1="614" x2="1140" y2="626"/>
+      <line class="dim-line" x1="1160" y1="120" x2="1160" y2="600"/>
+      <line class="dim-tick" x1="1154" y1="120" x2="1166" y2="120"/>
+      <line class="dim-tick" x1="1154" y1="600" x2="1166" y2="600"/>
 
-      <!-- Cut lines drawn here by JS animation -->
+      <!-- Cut lines drawn by JS -->
       <g id="cut-layer"></g>
 
-      <!-- CNC head indicator -->
+      <!-- CNC head -->
       <g id="cnc-head" opacity="0">
         <circle cx="0" cy="0" r="7"   fill="none" stroke="#fff" stroke-width="1.5" opacity="0.85"/>
         <circle cx="0" cy="0" r="2.5" fill="#fff" opacity="0.95"/>
@@ -241,10 +279,8 @@ footer{background:#0a0a0a;padding:28px 0}
       <div class="service-card reveal reveal-delay-1">
         <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="3" width="26" height="26" stroke-dasharray="3 2"/>
-          <rect x="6" y="6" width="9" height="8"/>
-          <rect x="17" y="6" width="9" height="8"/>
-          <rect x="6" y="16" width="13" height="10"/>
-          <circle cx="24" cy="21" r="4"/>
+          <rect x="6" y="6" width="9" height="8"/><rect x="17" y="6" width="9" height="8"/>
+          <rect x="6" y="16" width="13" height="10"/><circle cx="24" cy="21" r="4"/>
         </svg>
         <div class="service-title">CNC nesting</div>
         <div class="service-body">Upload your cut file and we'll nest and cut your parts from sheet material. MDF, plywood, melamine and more. Optimised for minimal waste.</div>
@@ -253,10 +289,10 @@ footer{background:#0a0a0a;padding:28px 0}
       <div class="service-card reveal reveal-delay-2">
         <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="11" width="26" height="10"/>
-          <line x1="3"  y1="11" x2="3"  y2="21" stroke-width="3"/>
+          <line x1="3" y1="11" x2="3" y2="21" stroke-width="3"/>
           <line x1="29" y1="11" x2="29" y2="21" stroke-width="3"/>
-          <line x1="7"  y1="15" x2="25" y2="15" stroke-dasharray="2 2"/>
-          <line x1="7"  y1="18" x2="25" y2="18" stroke-dasharray="2 2"/>
+          <line x1="7" y1="15" x2="25" y2="15" stroke-dasharray="2 2"/>
+          <line x1="7" y1="18" x2="25" y2="18" stroke-dasharray="2 2"/>
         </svg>
         <div class="service-title">Edgebanding</div>
         <div class="service-body">ABS and PVC edgebanding applied to your panels in-house. Matched to your board or custom colour. Straight edges and radius work available.</div>
@@ -265,10 +301,9 @@ footer{background:#0a0a0a;padding:28px 0}
       <div class="service-card reveal reveal-delay-3">
         <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="3" width="26" height="26"/>
-          <line x1="3"  y1="13" x2="29" y2="13"/>
-          <line x1="13" y1="3"  x2="13" y2="29"/>
-          <circle cx="8"  cy="8"  r="1.5" fill="currentColor" stroke="none"/>
-          <circle cx="21" cy="8"  r="1.5" fill="currentColor" stroke="none"/>
+          <line x1="3" y1="13" x2="29" y2="13"/><line x1="13" y1="3" x2="13" y2="29"/>
+          <circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="21" cy="8" r="1.5" fill="currentColor" stroke="none"/>
           <circle cx="21" cy="21" r="1.5" fill="currentColor" stroke="none"/>
         </svg>
         <div class="service-title">No file? No problem.</div>
@@ -327,188 +362,138 @@ footer{background:#0a0a0a;padding:28px 0}
 <script>
 (function () {
 
-  /* Page load */
   function init() {
     document.body.classList.add('loaded');
     setTimeout(startCNC, 400);
   }
-  if (document.readyState === 'complete') {
-    init();
-  } else {
-    window.addEventListener('load', init);
-  }
+  if (document.readyState === 'complete') { init(); }
+  else { window.addEventListener('load', init); }
 
-  /* ================================================================
-     CNC ANIMATION — point tracing with fixed dash grid
-
-     METHOD:
-     Each shape is sampled at 1px intervals along its perimeter.
-     A running distance counter d tracks cumulative travel from
-     shape start. Points where (d % UNIT) < DASH are "in dash zone".
-     We draw tiny SVG line segments only when BOTH the current AND
-     previous sample point are in the dash zone.
-     When entering a gap zone, prevPt is set to null so the next
-     dash zone starts completely fresh — no bridging across gaps,
-     no overlap at corners, no solid lines on any axis.
-     prevPt is also nulled between shapes.
-
-     SPEED: SVG units per millisecond, driven by timestamp delta.
-     Using time-based speed (not frame-count) so it's consistent
-     on all devices regardless of display refresh rate.
-     ================================================================ */
   function startCNC() {
     var layer = document.getElementById('cut-layer');
     var head  = document.getElementById('cnc-head');
     if (!layer || !head) { return; }
 
-    var DASH         = 8;    /* px of solid per unit */
-    var GAP          = 6;    /* px of gap per unit */
-    var UNIT         = DASH + GAP;
-    var SPEED        = 180;  /* SVG units per second */
+    var DASH  = 8;
+    var GAP   = 6;
+    var UNIT  = DASH + GAP;
+    var SPEED = 180; /* SVG units per second */
     var STROKE_COLOR = 'rgba(123,179,240,0.72)';
     var STROKE_WIDTH = '1.3';
 
-    function inDash(d) {
-      return (d % UNIT) < DASH;
+    /* Track drawn midpoints — key = "x,y" rounded to 1dp.
+       Before drawing a segment we check if its midpoint has already
+       been drawn. If yes, skip it — the line is already there. */
+    var drawn = {};
+
+    function segKey(p1, p2) {
+      var mx = ((p1.x + p2.x) / 2).toFixed(1);
+      var my = ((p1.y + p2.y) / 2).toFixed(1);
+      return mx + ',' + my;
     }
 
-    /* Sample rect perimeter clockwise from top-left at 1px steps */
+    function inDash(d) { return (d % UNIT) < DASH; }
+
     function sampleRect(x, y, w, h) {
-      var pts  = [];
-      var perim = 2 * (w + h);
-      var n    = Math.ceil(perim);
+      var pts = [], perim = 2*(w+h), n = Math.ceil(perim);
       for (var i = 0; i <= n; i++) {
-        var d = (i / n) * perim;
-        var p;
-        if      (d <= w)         p = {x: x + d,               y: y,             d: d};
-        else if (d <= w + h)     p = {x: x + w,               y: y + d - w,     d: d};
-        else if (d <= 2*w + h)   p = {x: x + w - (d-w-h),    y: y + h,         d: d};
-        else                     p = {x: x,                   y: y+h-(d-2*w-h), d: d};
+        var d = (i/n)*perim, p;
+        if      (d <= w)       p = {x:x+d,            y:y,           d:d};
+        else if (d <= w+h)     p = {x:x+w,             y:y+d-w,       d:d};
+        else if (d <= 2*w+h)   p = {x:x+w-(d-w-h),    y:y+h,         d:d};
+        else                   p = {x:x,               y:y+h-(d-2*w-h), d:d};
         pts.push(p);
       }
       return pts;
     }
 
-    /* Sample circle clockwise from top at 1px steps */
     function sampleCircle(cx, cy, r) {
-      var pts  = [];
-      var circ = 2 * Math.PI * r;
-      var n    = Math.ceil(circ);
+      var pts = [], circ = 2*Math.PI*r, n = Math.ceil(circ);
       for (var i = 0; i <= n; i++) {
-        var d = (i / n) * circ;
-        var a = -Math.PI / 2 + (d / circ) * 2 * Math.PI;
-        pts.push({x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), d: d});
+        var d = (i/n)*circ, a = -Math.PI/2 + (d/circ)*2*Math.PI;
+        pts.push({x:cx+r*Math.cos(a), y:cy+r*Math.sin(a), d:d});
       }
       return pts;
     }
 
-    /*
-      Shapes in draw order.
-      ROW1: 4 rects w=270 h=120, touching, starting x=60
-      ROW2: 1 rect w=852 h=120, then 2 circles r=57 (dia=114)
-            852+114+114=1080 ✓  circles touch rect and each other
-            c1 cx=60+852+57=969, c2 cx=969+114=1083
-      ROW3: 3 rects w=322 h=120 + 1 circle r=57
-            322*3=966, 966+114=1080 ✓
-            rects: x=60,382,704  circle cx=60+966+57=1083
-      ROW4: 2 rects w=540 h=120
-    */
+    /* Shapes — y offset by +60 from v3 because sheet now starts at y=120 */
     var shapes = [
-      {type:'rect',   x:60,  y:60,  w:270, h:120},
-      {type:'rect',   x:330, y:60,  w:270, h:120},
-      {type:'rect',   x:600, y:60,  w:270, h:120},
-      {type:'rect',   x:870, y:60,  w:270, h:120},
-      {type:'rect',   x:60,  y:180, w:852, h:120},
-      {type:'circle', cx:969,  cy:240, r:57},
-      {type:'circle', cx:1083, cy:240, r:57},
-      {type:'rect',   x:60,  y:300, w:322, h:120},
-      {type:'rect',   x:382, y:300, w:322, h:120},
-      {type:'rect',   x:704, y:300, w:322, h:120},
-      {type:'circle', cx:1083, cy:360, r:57},
-      {type:'rect',   x:60,  y:420, w:540, h:120},
-      {type:'rect',   x:600, y:420, w:540, h:120}
+      {type:'rect',   x:60,  y:120, w:270, h:120},
+      {type:'rect',   x:330, y:120, w:270, h:120},
+      {type:'rect',   x:600, y:120, w:270, h:120},
+      {type:'rect',   x:870, y:120, w:270, h:120},
+      {type:'rect',   x:60,  y:240, w:852, h:120},
+      {type:'circle', cx:969,  cy:300, r:57},
+      {type:'circle', cx:1083, cy:300, r:57},
+      {type:'rect',   x:60,  y:360, w:322, h:120},
+      {type:'rect',   x:382, y:360, w:322, h:120},
+      {type:'rect',   x:704, y:360, w:322, h:120},
+      {type:'circle', cx:1083, cy:420, r:57},
+      {type:'rect',   x:60,  y:480, w:540, h:120},
+      {type:'rect',   x:600, y:480, w:540, h:120}
     ];
 
-    /* Pre-sample all shapes */
-    var allPts = shapes.map(function (s) {
+    var allPts = shapes.map(function(s) {
       return s.type === 'circle'
         ? sampleCircle(s.cx, s.cy, s.r)
         : sampleRect(s.x, s.y, s.w, s.h);
     });
 
     function drawSeg(p1, p2) {
+      var key = segKey(p1, p2);
+      if (drawn[key]) { return; } /* already drawn — skip silently */
+      drawn[key] = true;
       var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('x1', p1.x.toFixed(1));
       line.setAttribute('y1', p1.y.toFixed(1));
       line.setAttribute('x2', p2.x.toFixed(1));
       line.setAttribute('y2', p2.y.toFixed(1));
-      line.setAttribute('stroke',         STROKE_COLOR);
-      line.setAttribute('stroke-width',   STROKE_WIDTH);
+      line.setAttribute('stroke', STROKE_COLOR);
+      line.setAttribute('stroke-width', STROKE_WIDTH);
       line.setAttribute('stroke-linecap', 'round');
       layer.appendChild(line);
     }
 
-    var shapeIdx  = 0;
-    var ptIdx     = 0;
-    var prevPt    = null;
-    var lastTime  = null;
-    var accumDist = 0; /* fractional distance carry-over between frames */
+    var shapeIdx = 0, ptIdx = 0, prevPt = null;
+    var lastTime = null, accumDist = 0;
 
     head.setAttribute('opacity', '1');
     var p0 = allPts[0][0];
-    head.setAttribute('transform', 'translate(' + p0.x.toFixed(1) + ',' + p0.y.toFixed(1) + ')');
+    head.setAttribute('transform', 'translate('+p0.x.toFixed(1)+','+p0.y.toFixed(1)+')');
 
     function frame(ts) {
-      if (shapeIdx >= allPts.length) {
-        head.setAttribute('opacity', '0');
-        return;
-      }
+      if (shapeIdx >= allPts.length) { head.setAttribute('opacity','0'); return; }
 
-      /* Time-based advancement — consistent speed on all screens */
       if (lastTime === null) { lastTime = ts; }
-      var dt       = ts - lastTime;
-      lastTime     = ts;
-      /* Cap dt to avoid huge jumps after tab switch */
+      var dt = ts - lastTime; lastTime = ts;
       if (dt > 100) { dt = 100; }
-      accumDist   += (SPEED / 1000) * dt;
-      var steps    = Math.floor(accumDist);
-      accumDist   -= steps;
+      accumDist += (SPEED / 1000) * dt;
+      var steps = Math.floor(accumDist);
+      accumDist -= steps;
 
       for (var i = 0; i < steps; i++) {
         if (shapeIdx >= allPts.length) { break; }
-
         var pts = allPts[shapeIdx];
 
         if (ptIdx >= pts.length) {
-          /* Advance to next shape — always reset prevPt */
-          shapeIdx++;
-          ptIdx  = 0;
-          prevPt = null;
+          shapeIdx++; ptIdx = 0; prevPt = null;
           if (shapeIdx >= allPts.length) { break; }
           pts = allPts[shapeIdx];
         }
 
-        var pt       = pts[ptIdx];
-        var ptInDash = inDash(pt.d);
-
-        if (ptInDash) {
-          if (prevPt !== null) {
-            drawSeg(prevPt, pt);
-          }
+        var pt = pts[ptIdx];
+        if (inDash(pt.d)) {
+          if (prevPt !== null) { drawSeg(prevPt, pt); }
           prevPt = pt;
         } else {
-          /* Gap zone — null prevPt so dashes never bridge gaps */
           prevPt = null;
         }
-
         ptIdx++;
       }
 
-      /* Move head to current position */
       if (shapeIdx < allPts.length) {
-        var idx = Math.min(ptIdx, allPts[shapeIdx].length - 1);
-        var cur = allPts[shapeIdx][idx];
-        head.setAttribute('transform', 'translate(' + cur.x.toFixed(1) + ',' + cur.y.toFixed(1) + ')');
+        var cur = allPts[shapeIdx][Math.min(ptIdx, allPts[shapeIdx].length-1)];
+        head.setAttribute('transform', 'translate('+cur.x.toFixed(1)+','+cur.y.toFixed(1)+')');
       }
 
       requestAnimationFrame(frame);
@@ -517,16 +502,14 @@ footer{background:#0a0a0a;padding:28px 0}
     requestAnimationFrame(frame);
   }
 
-  /* Scroll reveal */
-  var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
       if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
     });
   }, {threshold: 0.12});
-  document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
 
-  /* Mobile menu */
-  window.toggleMenu = function () {
+  window.toggleMenu = function() {
     var m = document.getElementById('mobile-menu');
     m.style.display = (m.style.display === 'block') ? 'none' : 'block';
   };
