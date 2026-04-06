@@ -27,7 +27,6 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 #mobile-menu a{display:block;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
 #mobile-menu a:last-child{border-bottom:none}
 .hero{height:100vh;background:var(--blue);position:relative;overflow:hidden;display:flex;align-items:center}
-/* No CSS grid — grid is drawn inside the SVG so it scales with the sheet */
 .hero-drawing{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:flex-end}
 #cnc-svg{height:100%;width:auto;display:block}
 .sheet-border{fill:none;stroke:rgba(123,179,240,0.22);stroke-width:0.75}
@@ -150,17 +149,8 @@ footer{background:#0a0a0a;padding:28px 0}
 
 <section class="hero">
   <div class="hero-drawing">
-    <!--
-      SVG viewBox 1200x900 — tall enough to fill viewport height.
-      Grid drawn INSIDE SVG at 60px intervals so it always scales
-      with the sheet. Sheet at x=60,y=120,w=1080,h=480.
-      Grid lines and sheet share the same coordinate space.
-    -->
     <svg id="cnc-svg" viewBox="0 0 1200 900" preserveAspectRatio="xMaxYMid meet" xmlns="http://www.w3.org/2000/svg">
-
-      <!-- Grid lines — same 60px spacing as sheet geometry -->
       <g id="grid-layer">
-        <!-- Vertical lines every 60px from 0 to 1200 -->
         <line class="grid-line" x1="60"   y1="0" x2="60"   y2="900"/>
         <line class="grid-line" x1="120"  y1="0" x2="120"  y2="900"/>
         <line class="grid-line" x1="180"  y1="0" x2="180"  y2="900"/>
@@ -180,7 +170,6 @@ footer{background:#0a0a0a;padding:28px 0}
         <line class="grid-line" x1="1020" y1="0" x2="1020" y2="900"/>
         <line class="grid-line" x1="1080" y1="0" x2="1080" y2="900"/>
         <line class="grid-line" x1="1140" y1="0" x2="1140" y2="900"/>
-        <!-- Horizontal lines every 60px from 0 to 900 -->
         <line class="grid-line" x1="0" y1="60"  x2="1200" y2="60"/>
         <line class="grid-line" x1="0" y1="120" x2="1200" y2="120"/>
         <line class="grid-line" x1="0" y1="180" x2="1200" y2="180"/>
@@ -196,19 +185,7 @@ footer{background:#0a0a0a;padding:28px 0}
         <line class="grid-line" x1="0" y1="780" x2="1200" y2="780"/>
         <line class="grid-line" x1="0" y1="840" x2="1200" y2="840"/>
       </g>
-
-      <!--
-        Sheet: x=60, y=120, w=1080, h=480
-        Corners on 60px grid: (60,120),(1140,120),(60,600),(1140,600)
-        Nesting rows h=120 each:
-        ROW1 y=120-240: 4 rects w=270
-        ROW2 y=240-360: 1 rect w=852 + 2 circles r=57 (852+114+114=1080)
-        ROW3 y=360-480: 3 rects w=322 + 1 circle r=57 (966+114=1080)
-        ROW4 y=480-600: 2 rects w=540
-      -->
       <rect class="sheet-border" x="60" y="120" width="1080" height="480"/>
-
-      <!-- Corner crosshairs — centred on exact corner coords -->
       <line class="corner-h" x1="42"  y1="120" x2="78"  y2="120"/>
       <line class="corner-v" x1="60"  y1="102" x2="60"  y2="138"/>
       <line class="corner-h" x1="1122" y1="120" x2="1158" y2="120"/>
@@ -217,19 +194,13 @@ footer{background:#0a0a0a;padding:28px 0}
       <line class="corner-v" x1="60"  y1="582" x2="60"  y2="618"/>
       <line class="corner-h" x1="1122" y1="600" x2="1158" y2="600"/>
       <line class="corner-v" x1="1140" y1="582" x2="1140" y2="618"/>
-
-      <!-- Dimension lines -->
       <line class="dim-line" x1="60"   y1="620" x2="1140" y2="620"/>
       <line class="dim-tick" x1="60"   y1="614" x2="60"   y2="626"/>
       <line class="dim-tick" x1="1140" y1="614" x2="1140" y2="626"/>
       <line class="dim-line" x1="1160" y1="120" x2="1160" y2="600"/>
       <line class="dim-tick" x1="1154" y1="120" x2="1166" y2="120"/>
       <line class="dim-tick" x1="1154" y1="600" x2="1166" y2="600"/>
-
-      <!-- Cut lines drawn by JS -->
       <g id="cut-layer"></g>
-
-      <!-- CNC head -->
       <g id="cnc-head" opacity="0">
         <circle cx="0" cy="0" r="7"   fill="none" stroke="#fff" stroke-width="1.5" opacity="0.85"/>
         <circle cx="0" cy="0" r="2.5" fill="#fff" opacity="0.95"/>
@@ -240,7 +211,6 @@ footer{background:#0a0a0a;padding:28px 0}
       </g>
     </svg>
   </div>
-
   <div class="hero-content-wrap">
     <div class="hero-content">
       <div class="hero-label">CNC nesting &amp; edgebanding &mdash; Aalsmeer</div>
@@ -256,18 +226,9 @@ footer{background:#0a0a0a;padding:28px 0}
 
 <div class="stats">
   <div class="stats-inner">
-    <div class="stat reveal reveal-delay-1">
-      <div class="stat-num">48<span>h</span></div>
-      <div class="stat-label">Standard turnaround</div>
-    </div>
-    <div class="stat reveal reveal-delay-2">
-      <div class="stat-num">DXF <span>/</span> DWG</div>
-      <div class="stat-label">File formats accepted</div>
-    </div>
-    <div class="stat reveal reveal-delay-3">
-      <div class="stat-num">AMS<span>.</span></div>
-      <div class="stat-label">Collection &amp; delivery</div>
-    </div>
+    <div class="stat reveal reveal-delay-1"><div class="stat-num">48<span>h</span></div><div class="stat-label">Standard turnaround</div></div>
+    <div class="stat reveal reveal-delay-2"><div class="stat-num">DXF <span>/</span> DWG</div><div class="stat-label">File formats accepted</div></div>
+    <div class="stat reveal reveal-delay-3"><div class="stat-num">AMS<span>.</span></div><div class="stat-label">Collection &amp; delivery</div></div>
   </div>
 </div>
 
@@ -318,26 +279,10 @@ footer{background:#0a0a0a;padding:28px 0}
   <div class="process-inner">
     <div class="process-label reveal">How it works</div>
     <div class="process-steps">
-      <div class="step reveal reveal-delay-1">
-        <div class="step-num">01</div>
-        <div class="step-title">Upload your file</div>
-        <div class="step-body">DXF, DWG or PDF. Include material spec and quantities.</div>
-      </div>
-      <div class="step reveal reveal-delay-2">
-        <div class="step-num">02</div>
-        <div class="step-title">We confirm &amp; quote</div>
-        <div class="step-body">Same day response. Clear pricing, no hidden costs.</div>
-      </div>
-      <div class="step reveal reveal-delay-3">
-        <div class="step-num">03</div>
-        <div class="step-title">We cut &amp; band</div>
-        <div class="step-body">Parts cut and edged in our Aalsmeer workshop. Quality checked before handover.</div>
-      </div>
-      <div class="step reveal reveal-delay-3">
-        <div class="step-num">04</div>
-        <div class="step-title">Collect or deliver</div>
-        <div class="step-body">Pick up from the studio or delivery across the Amsterdam region.</div>
-      </div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">01</div><div class="step-title">Upload your file</div><div class="step-body">DXF, DWG or PDF. Include material spec and quantities.</div></div>
+      <div class="step reveal reveal-delay-2"><div class="step-num">02</div><div class="step-title">We confirm &amp; quote</div><div class="step-body">Same day response. Clear pricing, no hidden costs.</div></div>
+      <div class="step reveal reveal-delay-3"><div class="step-num">03</div><div class="step-title">We cut &amp; band</div><div class="step-body">Parts cut and edged in our Aalsmeer workshop. Quality checked before handover.</div></div>
+      <div class="step reveal reveal-delay-3"><div class="step-num">04</div><div class="step-title">Collect or deliver</div><div class="step-body">Pick up from the studio or delivery across the Amsterdam region.</div></div>
     </div>
   </div>
 </section>
@@ -377,46 +322,44 @@ footer{background:#0a0a0a;padding:28px 0}
     var DASH  = 8;
     var GAP   = 6;
     var UNIT  = DASH + GAP;
-    var SPEED = 180; /* SVG units per second */
-    var STROKE_COLOR = 'rgba(123,179,240,0.72)';
-    var STROKE_WIDTH = '1.3';
-
-    /* Track drawn midpoints — key = "x,y" rounded to 1dp.
-       Before drawing a segment we check if its midpoint has already
-       been drawn. If yes, skip it — the line is already there. */
-    var drawn = {};
-
-    function segKey(p1, p2) {
-      var mx = ((p1.x + p2.x) / 2).toFixed(1);
-      var my = ((p1.y + p2.y) / 2).toFixed(1);
-      return mx + ',' + my;
-    }
+    var SPEED = 180;
+    var SC    = 'rgba(123,179,240,0.72)';
+    var SW    = '1.3';
 
     function inDash(d) { return (d % UNIT) < DASH; }
 
+    /* Normalise a segment key so A->B and B->A produce the same string.
+       Always put the point with smaller x (or smaller y if x equal) first. */
+    function segKey(p1, p2) {
+      var ax = p1.x, ay = p1.y, bx = p2.x, by = p2.y;
+      if (ax > bx || (ax === bx && ay > by)) {
+        ax = p2.x; ay = p2.y; bx = p1.x; by = p1.y;
+      }
+      return ax.toFixed(1)+','+ay.toFixed(1)+'|'+bx.toFixed(1)+','+by.toFixed(1);
+    }
+
     function sampleRect(x, y, w, h) {
-      var pts = [], perim = 2*(w+h), n = Math.ceil(perim);
+      var pts = [], p = 2*(w+h), n = Math.ceil(p);
       for (var i = 0; i <= n; i++) {
-        var d = (i/n)*perim, p;
-        if      (d <= w)       p = {x:x+d,            y:y,           d:d};
-        else if (d <= w+h)     p = {x:x+w,             y:y+d-w,       d:d};
-        else if (d <= 2*w+h)   p = {x:x+w-(d-w-h),    y:y+h,         d:d};
-        else                   p = {x:x,               y:y+h-(d-2*w-h), d:d};
-        pts.push(p);
+        var d = (i/n)*p, pt;
+        if      (d <= w)       pt = {x:x+d,          y:y,          d:d};
+        else if (d <= w+h)     pt = {x:x+w,           y:y+d-w,      d:d};
+        else if (d <= 2*w+h)   pt = {x:x+w-(d-w-h),  y:y+h,        d:d};
+        else                   pt = {x:x,             y:y+h-(d-2*w-h), d:d};
+        pts.push(pt);
       }
       return pts;
     }
 
     function sampleCircle(cx, cy, r) {
-      var pts = [], circ = 2*Math.PI*r, n = Math.ceil(circ);
+      var pts = [], c = 2*Math.PI*r, n = Math.ceil(c);
       for (var i = 0; i <= n; i++) {
-        var d = (i/n)*circ, a = -Math.PI/2 + (d/circ)*2*Math.PI;
+        var d = (i/n)*c, a = -Math.PI/2+(d/c)*2*Math.PI;
         pts.push({x:cx+r*Math.cos(a), y:cy+r*Math.sin(a), d:d});
       }
       return pts;
     }
 
-    /* Shapes — y offset by +60 from v3 because sheet now starts at y=120 */
     var shapes = [
       {type:'rect',   x:60,  y:120, w:270, h:120},
       {type:'rect',   x:330, y:120, w:270, h:120},
@@ -439,17 +382,25 @@ footer{background:#0a0a0a;padding:28px 0}
         : sampleRect(s.x, s.y, s.w, s.h);
     });
 
+    /* Pre-build deduplicated segment set.
+       Walk every shape, collect all dash-zone segments,
+       normalise each key. This Set tells us what has been drawn. */
+    var drawnKeys = new Set ? new Set() : (function(){
+      var o = {}, has = function(k){ return !!o[k]; }, add = function(k){ o[k]=1; };
+      return {has:has, add:add};
+    }());
+
     function drawSeg(p1, p2) {
       var key = segKey(p1, p2);
-      if (drawn[key]) { return; } /* already drawn — skip silently */
-      drawn[key] = true;
+      if (drawnKeys.has(key)) { return; }
+      drawnKeys.add(key);
       var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       line.setAttribute('x1', p1.x.toFixed(1));
       line.setAttribute('y1', p1.y.toFixed(1));
       line.setAttribute('x2', p2.x.toFixed(1));
       line.setAttribute('y2', p2.y.toFixed(1));
-      line.setAttribute('stroke', STROKE_COLOR);
-      line.setAttribute('stroke-width', STROKE_WIDTH);
+      line.setAttribute('stroke', SC);
+      line.setAttribute('stroke-width', SW);
       line.setAttribute('stroke-linecap', 'round');
       layer.appendChild(line);
     }
@@ -465,8 +416,8 @@ footer{background:#0a0a0a;padding:28px 0}
       if (shapeIdx >= allPts.length) { head.setAttribute('opacity','0'); return; }
 
       if (lastTime === null) { lastTime = ts; }
-      var dt = ts - lastTime; lastTime = ts;
-      if (dt > 100) { dt = 100; }
+      var dt = Math.min(ts - lastTime, 100);
+      lastTime = ts;
       accumDist += (SPEED / 1000) * dt;
       var steps = Math.floor(accumDist);
       accumDist -= steps;
@@ -476,23 +427,30 @@ footer{background:#0a0a0a;padding:28px 0}
         var pts = allPts[shapeIdx];
 
         if (ptIdx >= pts.length) {
-          shapeIdx++; ptIdx = 0; prevPt = null;
+          shapeIdx++;
+          ptIdx = 0;
+          prevPt = null;
           if (shapeIdx >= allPts.length) { break; }
           pts = allPts[shapeIdx];
         }
 
         var pt = pts[ptIdx];
+
         if (inDash(pt.d)) {
-          if (prevPt !== null) { drawSeg(prevPt, pt); }
+          if (prevPt !== null) {
+            drawSeg(prevPt, pt);
+          }
           prevPt = pt;
         } else {
           prevPt = null;
         }
+
         ptIdx++;
       }
 
+      /* Head always follows actual current position — no jumping */
       if (shapeIdx < allPts.length) {
-        var cur = allPts[shapeIdx][Math.min(ptIdx, allPts[shapeIdx].length-1)];
+        var cur = allPts[shapeIdx][Math.min(ptIdx, allPts[shapeIdx].length - 1)];
         head.setAttribute('transform', 'translate('+cur.x.toFixed(1)+','+cur.y.toFixed(1)+')');
       }
 
