@@ -12,8 +12,6 @@
 :root{--blue:#0f3d8c;--blue-light:#7bb3f0;--ink:#1a1a1a;--mid:#666;--line:rgba(255,255,255,0.08);--paper:#f4f4f2;--max:1400px}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden}
-
-/* NAV */
 #acnc-nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--blue);z-index:100;display:flex;align-items:center;justify-content:center}
 .nav-inner{max-width:var(--max);width:100%;padding:0 48px;display:flex;align-items:center;justify-content:space-between}
 .nav-logo{font-size:22px;font-weight:800;letter-spacing:0.1em;color:#fff;text-decoration:none}
@@ -28,8 +26,6 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 #mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--blue);padding:20px 28px 28px;z-index:99;border-top:1px solid rgba(255,255,255,0.1)}
 #mobile-menu a{display:block;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
 #mobile-menu a:last-child{border-bottom:none}
-
-/* HERO */
 .hero{height:100vh;background:var(--blue);position:relative;overflow:hidden;display:flex;align-items:center}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
 .hero-drawing{position:absolute;top:50%;right:-18%;transform:translateY(-50%);width:80%;z-index:1;pointer-events:none}
@@ -38,7 +34,6 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 .corner-h,.corner-v{stroke:rgba(123,179,240,0.35);stroke-width:1}
 .dim-line{stroke:rgba(123,179,240,0.1);stroke-width:0.5}
 .dim-tick{stroke:rgba(123,179,240,0.22);stroke-width:0.75}
-.cut-path{fill:none;stroke:rgba(123,179,240,0.65);stroke-width:1.2;stroke-dasharray:6 5}
 .hero-content-wrap{position:relative;z-index:2;max-width:var(--max);margin:0 auto;width:100%;padding:0 48px}
 .hero-content{max-width:480px}
 .hero-label{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue-light);margin-bottom:20px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(10px);transition:opacity 0.6s ease 0.2s,transform 0.6s ease 0.2s}
@@ -52,8 +47,6 @@ body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .
 .btn-primary:hover{background:var(--blue-light);color:#fff}
 .btn-secondary{font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.75);background:transparent;border:1px solid rgba(255,255,255,0.3);padding:14px 32px;text-decoration:none;display:inline-block;cursor:pointer;transition:border-color 0.25s,color 0.25s}
 .btn-secondary:hover{border-color:rgba(255,255,255,0.7);color:#fff}
-
-/* STATS */
 .stats{background:var(--ink)}
 .stats-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
 .stat{padding:28px 40px;border-right:1px solid var(--line)}
@@ -61,8 +54,6 @@ body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .
 .stat-num{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1;margin-bottom:5px}
 .stat-num span{color:var(--blue-light)}
 .stat-label{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
-
-/* SERVICES */
 .services{padding:80px 0;background:var(--paper)}
 .section-inner{max-width:var(--max);margin:0 auto;padding:0 48px}
 .section-label{font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:10px}
@@ -81,8 +72,6 @@ body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .
 .service-link{font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap 0.25s}
 .service-link:hover{gap:10px}
 .service-link::after{content:'→'}
-
-/* PROCESS */
 .process{background:var(--ink);padding:72px 0;position:relative;overflow:hidden}
 .process::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
 .process-inner{max-width:var(--max);margin:0 auto;padding:0 48px;position:relative;z-index:1}
@@ -95,29 +84,21 @@ body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .
 .step-num{font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--blue-light);margin-bottom:10px}
 .step-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
 .step-body{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65}
-
-/* CTA */
 .cta-strip{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding:72px 0}
 .cta-inner{max-width:var(--max);margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;gap:32px}
 .cta-text{font-size:36px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1.2;max-width:520px}
 .cta-text span{color:var(--blue-light)}
 .cta-actions{display:flex;gap:12px;flex-shrink:0}
-
-/* FOOTER */
 footer{background:#0a0a0a;padding:28px 0}
 .footer-inner{max-width:var(--max);margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .footer-logo{font-size:16px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-decoration:none}
 .footer-logo span{color:rgba(123,179,240,0.45)}
 .footer-info{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;text-align:right;line-height:1.7}
-
-/* REVEAL */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
 .reveal-delay-1{transition-delay:0.1s}
 .reveal-delay-2{transition-delay:0.2s}
 .reveal-delay-3{transition-delay:0.3s}
-
-/* MOBILE */
 @media(max-width:900px){
   .nav-inner{padding:0 24px}
   .nav-links{display:none}
@@ -168,33 +149,8 @@ footer{background:#0a0a0a;padding:28px 0}
 
 <section class="hero">
   <div class="hero-grid"></div>
-
   <div class="hero-drawing">
-    <!--
-      ANIMATION APPROACH: clipPath reveal.
-      Each shape has a <clipPath> containing a <rect> that starts at w=0 h=0.
-      The cut shapes are fully drawn (with dotted stroke) but hidden by clip.
-      JS expands each clip rect to reveal the shape as the cutter travels.
-      No stroke-dashoffset. No pathLength. Fully cross-browser.
-    -->
     <svg id="cnc-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="clip-r1a"><rect id="cr1a" x="40"  y="40"  width="0" height="0"/></clipPath>
-        <clipPath id="clip-r1b"><rect id="cr1b" x="320" y="40"  width="0" height="0"/></clipPath>
-        <clipPath id="clip-r1c"><rect id="cr1c" x="600" y="40"  width="0" height="0"/></clipPath>
-        <clipPath id="clip-r1d"><rect id="cr1d" x="880" y="40"  width="0" height="0"/></clipPath>
-        <clipPath id="clip-r2a"><rect id="cr2a" x="40"  y="170" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r2b"><rect id="cr2b" x="360" y="170" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r2c"><rect id="cr2c" x="680" y="170" width="0" height="0"/></clipPath>
-        <clipPath id="clip-c2" ><rect id="cc2"  x="960" y="175" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r3a"><rect id="cr3a" x="40"  y="300" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r3b"><rect id="cr3b" x="340" y="300" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r3c"><rect id="cr3c" x="640" y="300" width="0" height="0"/></clipPath>
-        <clipPath id="clip-c3" ><rect id="cc3"  x="960" y="305" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r4a"><rect id="cr4a" x="40"  y="430" width="0" height="0"/></clipPath>
-        <clipPath id="clip-r4b"><rect id="cr4b" x="600" y="430" width="0" height="0"/></clipPath>
-      </defs>
-
       <rect class="sheet-border" x="40" y="40" width="1120" height="520"/>
       <line class="corner-h" x1="22"   y1="40"  x2="58"   y2="40"/>
       <line class="corner-v" x1="40"   y1="22"  x2="40"   y2="58"/>
@@ -210,22 +166,8 @@ footer{background:#0a0a0a;padding:28px 0}
       <line class="dim-line" x1="1178" y1="40"  x2="1178" y2="560"/>
       <line class="dim-tick" x1="1171" y1="40"  x2="1185" y2="40"/>
       <line class="dim-tick" x1="1171" y1="560" x2="1185" y2="560"/>
-
-      <rect   class="cut-path" x="40"  y="40"  width="280" height="130" clip-path="url(#clip-r1a)"/>
-      <rect   class="cut-path" x="320" y="40"  width="280" height="130" clip-path="url(#clip-r1b)"/>
-      <rect   class="cut-path" x="600" y="40"  width="280" height="130" clip-path="url(#clip-r1c)"/>
-      <rect   class="cut-path" x="880" y="40"  width="280" height="130" clip-path="url(#clip-r1d)"/>
-      <rect   class="cut-path" x="40"  y="170" width="320" height="130" clip-path="url(#clip-r2a)"/>
-      <rect   class="cut-path" x="360" y="170" width="320" height="130" clip-path="url(#clip-r2b)"/>
-      <rect   class="cut-path" x="680" y="170" width="200" height="130" clip-path="url(#clip-r2c)"/>
-      <circle class="cut-path" cx="1020" cy="235" r="60"               clip-path="url(#clip-c2)"/>
-      <rect   class="cut-path" x="40"  y="300" width="300" height="130" clip-path="url(#clip-r3a)"/>
-      <rect   class="cut-path" x="340" y="300" width="300" height="130" clip-path="url(#clip-r3b)"/>
-      <rect   class="cut-path" x="640" y="300" width="240" height="130" clip-path="url(#clip-r3c)"/>
-      <circle class="cut-path" cx="1020" cy="365" r="60"               clip-path="url(#clip-c3)"/>
-      <rect   class="cut-path" x="40"  y="430" width="560" height="130" clip-path="url(#clip-r4a)"/>
-      <rect   class="cut-path" x="600" y="430" width="560" height="130" clip-path="url(#clip-r4b)"/>
-
+      <!-- Cut lines drawn here by JS -->
+      <g id="cut-layer"></g>
       <g id="cnc-head" opacity="0">
         <circle cx="0" cy="0" r="8"   fill="none" stroke="#fff" stroke-width="1.5" opacity="0.8"/>
         <circle cx="0" cy="0" r="2.5" fill="#fff" opacity="0.95"/>
@@ -236,7 +178,6 @@ footer{background:#0a0a0a;padding:28px 0}
       </g>
     </svg>
   </div>
-
   <div class="hero-content-wrap">
     <div class="hero-content">
       <div class="hero-label">CNC nesting &amp; edgebanding &mdash; Aalsmeer</div>
@@ -287,10 +228,10 @@ footer{background:#0a0a0a;padding:28px 0}
       <div class="service-card reveal reveal-delay-2">
         <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="11" width="26" height="10"/>
-          <line x1="3" y1="11" x2="3" y2="21" stroke-width="3"/>
+          <line x1="3"  y1="11" x2="3"  y2="21" stroke-width="3"/>
           <line x1="29" y1="11" x2="29" y2="21" stroke-width="3"/>
-          <line x1="7" y1="15" x2="25" y2="15" stroke-dasharray="2 2"/>
-          <line x1="7" y1="18" x2="25" y2="18" stroke-dasharray="2 2"/>
+          <line x1="7"  y1="15" x2="25" y2="15" stroke-dasharray="2 2"/>
+          <line x1="7"  y1="18" x2="25" y2="18" stroke-dasharray="2 2"/>
         </svg>
         <div class="service-title">Edgebanding</div>
         <div class="service-body">ABS and PVC edgebanding applied to your panels in-house. Matched to your board or custom colour. Straight edges and radius work available.</div>
@@ -299,10 +240,10 @@ footer{background:#0a0a0a;padding:28px 0}
       <div class="service-card reveal reveal-delay-3">
         <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="3" width="26" height="26"/>
-          <line x1="3" y1="13" x2="29" y2="13"/>
-          <line x1="13" y1="3" x2="13" y2="29"/>
-          <circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/>
-          <circle cx="21" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+          <line x1="3"  y1="13" x2="29" y2="13"/>
+          <line x1="13" y1="3"  x2="13" y2="29"/>
+          <circle cx="8"  cy="8"  r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="21" cy="8"  r="1.5" fill="currentColor" stroke="none"/>
           <circle cx="21" cy="21" r="1.5" fill="currentColor" stroke="none"/>
         </svg>
         <div class="service-title">No file? No problem.</div>
@@ -361,118 +302,158 @@ footer{background:#0a0a0a;padding:28px 0}
 <script>
 (function() {
 
-  /* Page load */
   window.addEventListener('load', function() {
     document.body.classList.add('loaded');
     setTimeout(startCNC, 500);
   });
 
-  /* CNC animation — clipPath reveal approach.
-     No stroke-dashoffset. No pathLength.
-     Each shape has a clipPath whose rect starts at w=0 h=0.
-     JS expands the clip rect to reveal the shape progressively.
-     The cutter head tracks the shape outline using pointAt(). */
+  /* =============================================================
+     CNC ANIMATION
+     Approach: point-tracing with fixed dash grid.
+
+     Each shape is sampled at 1px intervals along its perimeter.
+     For each sample point we check if it falls inside a DASH zone
+     based on cumulative distance from the shape start.
+     DASH zone: every (DASH+GAP) unit, the first DASH pixels are solid.
+     This guarantees no overlap and consistent dash anchoring.
+
+     Points are revealed one frame at a time — the cutter always
+     leads the drawn line because we draw the previous point,
+     not the current one.
+     ============================================================= */
   function startCNC() {
-    var head = document.getElementById('cnc-head');
-    if (!head) return;
+    var layer = document.getElementById('cut-layer');
+    var head  = document.getElementById('cnc-head');
+    if (!layer || !head) { return; }
 
-    var speed = 0.7; /* SVG units per ms */
+    var DASH  = 8;        /* px of solid line per unit */
+    var GAP   = 6;        /* px of gap per unit */
+    var UNIT  = DASH + GAP;
+    var SPEED = 3;        /* sample points revealed per frame */
+    var STROKE_COLOR = 'rgba(123,179,240,0.7)';
+    var STROKE_WIDTH = '1.2';
 
-    var seq = [
-      /* Each entry: clipId = id of <rect> inside <clipPath>
-         type = rect or circle
-         For rects:   x,y,w,h — position and size
-         For circles: cx,cy,r — centre and radius
-                      bx,by,bw,bh — bounding box for clip rect */
-      {clipId:'cr1a', type:'rect',   x:40,   y:40,  w:280, h:130},
-      {clipId:'cr1b', type:'rect',   x:320,  y:40,  w:280, h:130},
-      {clipId:'cr1c', type:'rect',   x:600,  y:40,  w:280, h:130},
-      {clipId:'cr1d', type:'rect',   x:880,  y:40,  w:280, h:130},
-      {clipId:'cr2a', type:'rect',   x:40,   y:170, w:320, h:130},
-      {clipId:'cr2b', type:'rect',   x:360,  y:170, w:320, h:130},
-      {clipId:'cr2c', type:'rect',   x:680,  y:170, w:200, h:130},
-      {clipId:'cc2',  type:'circle', cx:1020,cy:235, r:60,  bx:960,by:175,bw:120,bh:120},
-      {clipId:'cr3a', type:'rect',   x:40,   y:300, w:300, h:130},
-      {clipId:'cr3b', type:'rect',   x:340,  y:300, w:300, h:130},
-      {clipId:'cr3c', type:'rect',   x:640,  y:300, w:240, h:130},
-      {clipId:'cc3',  type:'circle', cx:1020,cy:365, r:60,  bx:960,by:305,bw:120,bh:120},
-      {clipId:'cr4a', type:'rect',   x:40,   y:430, w:560, h:130},
-      {clipId:'cr4b', type:'rect',   x:600,  y:430, w:560, h:130}
+    /* Returns true if cumulative distance d falls in a dash zone */
+    function inDash(d) {
+      return (d % UNIT) < DASH;
+    }
+
+    /* Sample a rect perimeter at 1px resolution, clockwise from top-left */
+    function sampleRect(x, y, w, h) {
+      var pts = [];
+      var perim = 2 * (w + h);
+      var n = Math.ceil(perim);
+      for (var i = 0; i <= n; i++) {
+        var d = (i / n) * perim;
+        var pt;
+        if      (d <= w)           pt = {x: x + d,               y: y,         d: d};
+        else if (d <= w + h)       pt = {x: x + w,               y: y + d - w, d: d};
+        else if (d <= 2*w + h)     pt = {x: x + w - (d-w-h),     y: y + h,     d: d};
+        else                       pt = {x: x,                    y: y + h - (d-2*w-h), d: d};
+        pts.push(pt);
+      }
+      return pts;
+    }
+
+    /* Sample a circle at 1px resolution, clockwise from top */
+    function sampleCircle(cx, cy, r) {
+      var pts = [];
+      var circ = 2 * Math.PI * r;
+      var n = Math.ceil(circ);
+      for (var i = 0; i <= n; i++) {
+        var d = (i / n) * circ;
+        var a = -Math.PI / 2 + (d / circ) * 2 * Math.PI;
+        pts.push({x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), d: d});
+      }
+      return pts;
+    }
+
+    /* Define shapes in draw order */
+    var shapes = [
+      {type:'rect',   x:40,   y:40,  w:280, h:130},
+      {type:'rect',   x:320,  y:40,  w:280, h:130},
+      {type:'rect',   x:600,  y:40,  w:280, h:130},
+      {type:'rect',   x:880,  y:40,  w:280, h:130},
+      {type:'rect',   x:40,   y:170, w:320, h:130},
+      {type:'rect',   x:360,  y:170, w:320, h:130},
+      {type:'rect',   x:680,  y:170, w:200, h:130},
+      {type:'circle', cx:1020, cy:235, r:60},
+      {type:'rect',   x:40,   y:300, w:300, h:130},
+      {type:'rect',   x:340,  y:300, w:300, h:130},
+      {type:'rect',   x:640,  y:300, w:240, h:130},
+      {type:'circle', cx:1020, cy:365, r:60},
+      {type:'rect',   x:40,   y:430, w:560, h:130},
+      {type:'rect',   x:600,  y:430, w:560, h:130}
     ];
 
-    function perim(s) {
-      return s.type === 'circle' ? 2 * Math.PI * s.r : 2 * (s.w + s.h);
+    /* Pre-sample all shapes */
+    var allPts = shapes.map(function(s) {
+      return s.type === 'circle'
+        ? sampleCircle(s.cx, s.cy, s.r)
+        : sampleRect(s.x, s.y, s.w, s.h);
+    });
+
+    var shapeIdx = 0;
+    var ptIdx    = 0;
+    var prevPt   = null;
+
+    /* Helper to draw one tiny segment */
+    function drawSegment(p1, p2) {
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', p1.x.toFixed(2));
+      line.setAttribute('y1', p1.y.toFixed(2));
+      line.setAttribute('x2', p2.x.toFixed(2));
+      line.setAttribute('y2', p2.y.toFixed(2));
+      line.setAttribute('stroke', STROKE_COLOR);
+      line.setAttribute('stroke-width', STROKE_WIDTH);
+      line.setAttribute('stroke-linecap', 'round');
+      layer.appendChild(line);
     }
 
-    function pointAt(s, t) {
-      if (s.type === 'circle') {
-        var a = -Math.PI / 2 + t * 2 * Math.PI;
-        return {x: s.cx + s.r * Math.cos(a), y: s.cy + s.r * Math.sin(a)};
-      }
-      var p = perim(s), d = t * p;
-      if (d <= s.w)         return {x: s.x + d,                 y: s.y};
-      if (d <= s.w + s.h)   return {x: s.x + s.w,               y: s.y + d - s.w};
-      if (d <= 2*s.w + s.h) return {x: s.x + s.w - (d-s.w-s.h), y: s.y + s.h};
-      return                       {x: s.x,                      y: s.y + s.h - (d - 2*s.w - s.h)};
-    }
+    head.setAttribute('opacity', '1');
 
-    var idx = 0;
+    /* Set head to start of first shape */
+    var firstPt = allPts[0][0];
+    head.setAttribute('transform', 'translate('+firstPt.x.toFixed(2)+','+firstPt.y.toFixed(2)+')');
 
-    function drawNext() {
-      if (idx >= seq.length) {
+    function frame() {
+      if (shapeIdx >= allPts.length) {
         head.setAttribute('opacity', '0');
         return;
       }
 
-      var s    = seq[idx];
-      var clip = document.getElementById(s.clipId);
+      var pts = allPts[shapeIdx];
 
-      if (!clip) {
-        idx++;
-        drawNext();
-        return;
+      for (var step = 0; step < SPEED; step++) {
+        if (ptIdx >= pts.length) {
+          /* Move to next shape */
+          shapeIdx++;
+          ptIdx  = 0;
+          prevPt = null;
+          break;
+        }
+
+        var pt = pts[ptIdx];
+
+        /* Draw segment only if previous point exists AND we are in dash zone */
+        if (prevPt !== null && inDash(pt.d)) {
+          drawSegment(prevPt, pt);
+        }
+
+        prevPt = pt;
+        ptIdx++;
       }
 
-      var len      = perim(s);
-      var duration = len / speed;
-      var bx = (s.type === 'circle') ? s.bx : s.x;
-      var by = (s.type === 'circle') ? s.by : s.y;
-      var bw = (s.type === 'circle') ? s.bw : s.w;
-      var bh = (s.type === 'circle') ? s.bh : s.h;
-
-      head.setAttribute('opacity', '1');
-      var t0 = null;
-
-      function frame(ts) {
-        if (!t0) { t0 = ts; }
-        var prog = (ts - t0) / duration;
-        if (prog > 1) { prog = 1; }
-
-        clip.setAttribute('x',      String(bx));
-        clip.setAttribute('y',      String(by));
-        clip.setAttribute('width',  String(bw * prog));
-        clip.setAttribute('height', String(bh * prog));
-
-        var pt = pointAt(s, prog);
-        head.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
-
-        if (prog < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          clip.setAttribute('width',  String(bw));
-          clip.setAttribute('height', String(bh));
-          setTimeout(function() { idx++; drawNext(); }, 25);
-        }
+      /* Move head to current position */
+      if (shapeIdx < allPts.length) {
+        var cur = allPts[shapeIdx][Math.min(ptIdx, allPts[shapeIdx].length - 1)];
+        head.setAttribute('transform', 'translate('+cur.x.toFixed(2)+','+cur.y.toFixed(2)+')');
       }
 
       requestAnimationFrame(frame);
     }
 
-    /* Start head at first shape origin */
-    var p0 = pointAt(seq[0], 0);
-    head.setAttribute('transform', 'translate(' + p0.x + ',' + p0.y + ')');
-    head.setAttribute('opacity', '1');
-    setTimeout(drawNext, 100);
+    requestAnimationFrame(frame);
   }
 
   /* Scroll reveal */
