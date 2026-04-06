@@ -28,7 +28,7 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 #mobile-menu a:last-child{border-bottom:none}
 .hero{height:100vh;background:var(--blue);position:relative;overflow:hidden;display:flex;align-items:center}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
-.hero-drawing{position:absolute;top:50%;right:-18%;transform:translateY(-50%);width:80%;z-index:1;pointer-events:none}
+.hero-drawing{position:absolute;top:50%;right:0;transform:translateY(-50%);width:62%;z-index:1;pointer-events:none}
 #cnc-svg{width:100%;height:auto}
 .sheet-border{fill:none;stroke:rgba(123,179,240,0.18);stroke-width:0.75}
 .corner-h,.corner-v{stroke:rgba(123,179,240,0.35);stroke-width:1}
@@ -151,21 +151,22 @@ footer{background:#0a0a0a;padding:28px 0}
   <div class="hero-grid"></div>
   <div class="hero-drawing">
     <svg id="cnc-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
-      <rect class="sheet-border" x="40" y="40" width="1120" height="520"/>
-      <line class="corner-h" x1="22"   y1="40"  x2="58"   y2="40"/>
-      <line class="corner-v" x1="40"   y1="22"  x2="40"   y2="58"/>
-      <line class="corner-h" x1="1142" y1="40"  x2="1178" y2="40"/>
-      <line class="corner-v" x1="1160" y1="22"  x2="1160" y2="58"/>
-      <line class="corner-h" x1="22"   y1="560" x2="58"   y2="560"/>
-      <line class="corner-v" x1="40"   y1="542" x2="40"   y2="578"/>
-      <line class="corner-h" x1="1142" y1="560" x2="1178" y2="560"/>
-      <line class="corner-v" x1="1160" y1="542" x2="1160" y2="578"/>
-      <line class="dim-line" x1="40"   y1="585" x2="1160" y2="585"/>
-      <line class="dim-tick" x1="40"   y1="578" x2="40"   y2="592"/>
-      <line class="dim-tick" x1="1160" y1="578" x2="1160" y2="592"/>
-      <line class="dim-line" x1="1178" y1="40"  x2="1178" y2="560"/>
-      <line class="dim-tick" x1="1171" y1="40"  x2="1185" y2="40"/>
-      <line class="dim-tick" x1="1171" y1="560" x2="1185" y2="560"/>
+      <!-- Sheet aligned to 60px grid: x=60,y=60, 18x60=1080 wide, 8x60=480 tall -->
+      <rect class="sheet-border" x="60" y="60" width="1080" height="480"/>
+      <line class="corner-h" x1="44"   y1="60"  x2="76"   y2="60"/>
+      <line class="corner-v" x1="60"   y1="44"  x2="60"   y2="76"/>
+      <line class="corner-h" x1="1124" y1="60"  x2="1156" y2="60"/>
+      <line class="corner-v" x1="1140" y1="44"  x2="1140" y2="76"/>
+      <line class="corner-h" x1="44"   y1="540" x2="76"   y2="540"/>
+      <line class="corner-v" x1="60"   y1="524" x2="60"   y2="556"/>
+      <line class="corner-h" x1="1124" y1="540" x2="1156" y2="540"/>
+      <line class="corner-v" x1="1140" y1="524" x2="1140" y2="556"/>
+      <line class="dim-line" x1="60"   y1="562" x2="1140" y2="562"/>
+      <line class="dim-tick" x1="60"   y1="556" x2="60"   y2="568"/>
+      <line class="dim-tick" x1="1140" y1="556" x2="1140" y2="568"/>
+      <line class="dim-line" x1="1158" y1="60"  x2="1158" y2="540"/>
+      <line class="dim-tick" x1="1152" y1="60"  x2="1164" y2="60"/>
+      <line class="dim-tick" x1="1152" y1="540" x2="1164" y2="540"/>
       <!-- Cut lines drawn here by JS -->
       <g id="cut-layer"></g>
       <g id="cnc-head" opacity="0">
@@ -336,7 +337,7 @@ footer{background:#0a0a0a;padding:28px 0}
     var DASH  = 8;        /* px of solid line per unit */
     var GAP   = 6;        /* px of gap per unit */
     var UNIT  = DASH + GAP;
-    var SPEED = 3;        /* sample points revealed per frame */
+    var SPEED = 10;       /* sample points revealed per frame */
     var STROKE_COLOR = 'rgba(123,179,240,0.7)';
     var STROKE_WIDTH = '1.2';
 
@@ -377,20 +378,20 @@ footer{background:#0a0a0a;padding:28px 0}
 
     /* Define shapes in draw order */
     var shapes = [
-      {type:'rect',   x:40,   y:40,  w:280, h:130},
-      {type:'rect',   x:320,  y:40,  w:280, h:130},
-      {type:'rect',   x:600,  y:40,  w:280, h:130},
-      {type:'rect',   x:880,  y:40,  w:280, h:130},
-      {type:'rect',   x:40,   y:170, w:320, h:130},
-      {type:'rect',   x:360,  y:170, w:320, h:130},
-      {type:'rect',   x:680,  y:170, w:200, h:130},
-      {type:'circle', cx:1020, cy:235, r:60},
-      {type:'rect',   x:40,   y:300, w:300, h:130},
-      {type:'rect',   x:340,  y:300, w:300, h:130},
-      {type:'rect',   x:640,  y:300, w:240, h:130},
-      {type:'circle', cx:1020, cy:365, r:60},
-      {type:'rect',   x:40,   y:430, w:560, h:130},
-      {type:'rect',   x:600,  y:430, w:560, h:130}
+      {type:'rect',   x:60,   y:60,  w:270, h:120},
+      {type:'rect',   x:330,  y:60,  w:270, h:120},
+      {type:'rect',   x:600,  y:60,  w:270, h:120},
+      {type:'rect',   x:870,  y:60,  w:270, h:120},
+      {type:'rect',   x:60,   y:180, w:300, h:120},
+      {type:'rect',   x:360,  y:180, w:300, h:120},
+      {type:'rect',   x:660,  y:180, w:180, h:120},
+      {type:'circle', cx:1020, cy:240, r:54},
+      {type:'rect',   x:60,   y:300, w:300, h:120},
+      {type:'rect',   x:360,  y:300, w:270, h:120},
+      {type:'rect',   x:630,  y:300, w:210, h:120},
+      {type:'circle', cx:1020, cy:360, r:54},
+      {type:'rect',   x:60,   y:420, w:540, h:120},
+      {type:'rect',   x:600,  y:420, w:540, h:120}
     ];
 
     /* Pre-sample all shapes */
@@ -442,18 +443,17 @@ footer{background:#0a0a0a;padding:28px 0}
 
         var pt = pts[ptIdx];
 
-        var ptInDash   = inDash(pt.d);
-        var prevInDash = (prevPt !== null) && inDash(prevPt.d);
+        var ptInDash = inDash(pt.d);
 
-        if (ptInDash && prevInDash && prevPt !== null) {
-          /* Both points in dash zone — draw the segment */
-          drawSegment(prevPt, pt);
-          prevPt = pt;
-        } else if (ptInDash) {
-          /* Start of a new dash zone — just record position, don't draw yet */
+        if (ptInDash) {
+          if (prevPt !== null) {
+            /* Both in dash zone — draw segment */
+            drawSegment(prevPt, pt);
+          }
+          /* Always update prevPt while in dash zone */
           prevPt = pt;
         } else {
-          /* In gap zone — clear prevPt so dashes never bridge a gap */
+          /* In gap — null out prevPt so next dash starts clean */
           prevPt = null;
         }
 
