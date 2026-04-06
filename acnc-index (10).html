@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACNC — CNC Nesting & Edgebanding, Aalsmeer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#0f3d8c;--blue-light:#7bb3f0;--ink:#1a1a1a;--mid:#666;--line:rgba(255,255,255,0.08);--paper:#f4f4f2;--max:1400px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden}
+
+/* NAV */
+#acnc-nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--blue);z-index:100;display:flex;align-items:center;justify-content:center}
+.nav-inner{max-width:var(--max);width:100%;padding:0 48px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:22px;font-weight:800;letter-spacing:0.1em;color:#fff;text-decoration:none}
+.nav-logo span{color:var(--blue-light)}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.25s}
+.nav-links a:hover{color:#fff}
+.nav-cta{color:var(--blue)!important;background:#fff;padding:9px 22px;font-weight:700!important;transition:background 0.25s,color 0.25s!important}
+.nav-cta:hover{background:var(--blue-light)!important;color:#fff!important}
+#nav-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+#nav-burger span{display:block;width:22px;height:1px;background:#fff;transition:all 0.3s}
+#mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--blue);padding:20px 28px 28px;z-index:99;border-top:1px solid rgba(255,255,255,0.1)}
+#mobile-menu a{display:block;font-size:13px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);text-decoration:none;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.08)}
+#mobile-menu a:last-child{border-bottom:none}
+
+/* HERO */
+.hero{height:100vh;background:var(--blue);position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.hero-drawing{position:absolute;top:50%;right:-18%;transform:translateY(-50%);width:80%;z-index:1;pointer-events:none}
+#cnc-svg{width:100%;height:auto}
+.sheet-border{fill:none;stroke:rgba(123,179,240,0.18);stroke-width:0.75}
+.corner-h,.corner-v{stroke:rgba(123,179,240,0.35);stroke-width:1}
+.dim-line{stroke:rgba(123,179,240,0.1);stroke-width:0.5}
+.dim-tick{stroke:rgba(123,179,240,0.22);stroke-width:0.75}
+.cut-path{fill:none;stroke:rgba(123,179,240,0.65);stroke-width:1.2;stroke-dasharray:6 5}
+.hero-content-wrap{position:relative;z-index:2;max-width:var(--max);margin:0 auto;width:100%;padding:0 48px}
+.hero-content{max-width:480px}
+.hero-label{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue-light);margin-bottom:20px;display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(10px);transition:opacity 0.6s ease 0.2s,transform 0.6s ease 0.2s}
+.hero-label::before{content:'';width:28px;height:1px;background:var(--blue-light)}
+.hero-h1{font-size:80px;font-weight:800;letter-spacing:-0.03em;line-height:0.92;color:#fff;margin-bottom:28px;opacity:0;transform:translateY(16px);transition:opacity 0.6s ease 0.35s,transform 0.6s ease 0.35s}
+.hero-h1 span{color:var(--blue-light)}
+.hero-sub{font-size:16px;color:rgba(255,255,255,0.58);line-height:1.75;margin-bottom:40px;max-width:400px;opacity:0;transform:translateY(12px);transition:opacity 0.6s ease 0.5s,transform 0.6s ease 0.5s}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;opacity:0;transform:translateY(10px);transition:opacity 0.6s ease 0.65s,transform 0.6s ease 0.65s}
+body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .hero-btns{opacity:1;transform:translateY(0)}
+.btn-primary{font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);background:#fff;border:none;padding:14px 32px;text-decoration:none;display:inline-block;cursor:pointer;transition:background 0.25s,color 0.25s}
+.btn-primary:hover{background:var(--blue-light);color:#fff}
+.btn-secondary{font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.75);background:transparent;border:1px solid rgba(255,255,255,0.3);padding:14px 32px;text-decoration:none;display:inline-block;cursor:pointer;transition:border-color 0.25s,color 0.25s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.7);color:#fff}
+
+/* STATS */
+.stats{background:var(--ink)}
+.stats-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.stat{padding:28px 40px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat-num{font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1;margin-bottom:5px}
+.stat-num span{color:var(--blue-light)}
+.stat-label{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.35)}
+
+/* SERVICES */
+.services{padding:80px 0;background:var(--paper)}
+.section-inner{max-width:var(--max);margin:0 auto;padding:0 48px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.section-label::before{content:'';width:20px;height:2px;background:var(--blue)}
+.section-h2{font-size:36px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;margin-bottom:48px}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.service-card{background:#fff;padding:36px 28px;position:relative;overflow:hidden;border-top:3px solid var(--blue);transition:transform 0.3s ease}
+.service-card:nth-child(2){border-top-color:var(--blue-light)}
+.service-card:nth-child(3){border-top-color:var(--ink)}
+.service-card:hover{transform:translateY(-3px)}
+.service-card::before{content:'';position:absolute;top:10px;left:10px;width:10px;height:10px;border-left:1px solid rgba(0,0,0,0.1);border-top:1px solid rgba(0,0,0,0.1)}
+.service-card::after{content:'';position:absolute;bottom:10px;right:10px;width:10px;height:10px;border-right:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(0,0,0,0.1)}
+.service-icon{width:32px;height:32px;margin-bottom:20px;color:var(--blue)}
+.service-title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px}
+.service-body{font-size:13px;color:var(--mid);line-height:1.75;margin-bottom:24px}
+.service-link{font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap 0.25s}
+.service-link:hover{gap:10px}
+.service-link::after{content:'→'}
+
+/* PROCESS */
+.process{background:var(--ink);padding:72px 0;position:relative;overflow:hidden}
+.process::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.process-inner{max-width:var(--max);margin:0 auto;padding:0 48px;position:relative;z-index:1}
+.process-label{font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue-light);margin-bottom:40px;display:flex;align-items:center;gap:10px}
+.process-label::before{content:'';width:20px;height:2px;background:var(--blue-light)}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr)}
+.step{border-right:1px solid rgba(255,255,255,0.08);padding-right:28px}
+.step:last-child{border-right:none;padding-right:0}
+.step:not(:first-child){padding-left:28px}
+.step-num{font-size:11px;font-weight:700;letter-spacing:0.18em;color:var(--blue-light);margin-bottom:10px}
+.step-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+.step-body{font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65}
+
+/* CTA */
+.cta-strip{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding:72px 0}
+.cta-inner{max-width:var(--max);margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.cta-text{font-size:36px;font-weight:800;color:#fff;letter-spacing:-0.02em;line-height:1.2;max-width:520px}
+.cta-text span{color:var(--blue-light)}
+.cta-actions{display:flex;gap:12px;flex-shrink:0}
+
+/* FOOTER */
+footer{background:#0a0a0a;padding:28px 0}
+.footer-inner{max-width:var(--max);margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.footer-logo{font-size:16px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-decoration:none}
+.footer-logo span{color:rgba(123,179,240,0.45)}
+.footer-info{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;text-align:right;line-height:1.7}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+
+/* MOBILE */
+@media(max-width:900px){
+  .nav-inner{padding:0 24px}
+  .nav-links{display:none}
+  #nav-burger{display:flex}
+  .hero-content-wrap{padding:0 24px}
+  .hero-h1{font-size:52px}
+  .hero-drawing{width:100%;right:-20%;top:auto;bottom:-10%;transform:none;opacity:0.35}
+  .stats-inner{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:none}
+  .section-inner,.process-inner,.cta-inner,.footer-inner{padding:0 24px}
+  .services{padding:56px 0}
+  .services-grid{grid-template-columns:1fr}
+  .process{padding:56px 0}
+  .process-steps{grid-template-columns:1fr 1fr;gap:32px}
+  .step{border-right:none;padding:0!important}
+  .cta-strip{padding:56px 0}
+  .cta-inner{flex-direction:column;align-items:flex-start}
+  .cta-text{font-size:28px}
+  footer{padding:28px 0}
+  .footer-inner{flex-direction:column;align-items:flex-start}
+  .footer-info{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<nav id="acnc-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">AC<span>NC</span></a>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#process">How it works</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-cta">Get a quote</a>
+    </div>
+    <button id="nav-burger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div id="mobile-menu">
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#process"  onclick="toggleMenu()">How it works</a>
+  <a href="#contact"  onclick="toggleMenu()">Contact</a>
+  <a href="#contact"  onclick="toggleMenu()">Get a quote</a>
+</div>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="hero-drawing">
+    <!--
+      ANIMATION APPROACH: clipPath reveal.
+      Each shape has a <clipPath> containing a <rect> that starts at w=0 h=0.
+      The cut shapes are fully drawn (with dotted stroke) but hidden by clip.
+      JS expands each clip rect to reveal the shape as the cutter travels.
+      No stroke-dashoffset. No pathLength. Fully cross-browser.
+    -->
+    <svg id="cnc-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="clip-r1a"><rect id="cr1a" x="40"  y="40"  width="0" height="0"/></clipPath>
+        <clipPath id="clip-r1b"><rect id="cr1b" x="320" y="40"  width="0" height="0"/></clipPath>
+        <clipPath id="clip-r1c"><rect id="cr1c" x="600" y="40"  width="0" height="0"/></clipPath>
+        <clipPath id="clip-r1d"><rect id="cr1d" x="880" y="40"  width="0" height="0"/></clipPath>
+        <clipPath id="clip-r2a"><rect id="cr2a" x="40"  y="170" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r2b"><rect id="cr2b" x="360" y="170" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r2c"><rect id="cr2c" x="680" y="170" width="0" height="0"/></clipPath>
+        <clipPath id="clip-c2" ><rect id="cc2"  x="960" y="175" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r3a"><rect id="cr3a" x="40"  y="300" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r3b"><rect id="cr3b" x="340" y="300" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r3c"><rect id="cr3c" x="640" y="300" width="0" height="0"/></clipPath>
+        <clipPath id="clip-c3" ><rect id="cc3"  x="960" y="305" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r4a"><rect id="cr4a" x="40"  y="430" width="0" height="0"/></clipPath>
+        <clipPath id="clip-r4b"><rect id="cr4b" x="600" y="430" width="0" height="0"/></clipPath>
+      </defs>
+
+      <rect class="sheet-border" x="40" y="40" width="1120" height="520"/>
+      <line class="corner-h" x1="22"   y1="40"  x2="58"   y2="40"/>
+      <line class="corner-v" x1="40"   y1="22"  x2="40"   y2="58"/>
+      <line class="corner-h" x1="1142" y1="40"  x2="1178" y2="40"/>
+      <line class="corner-v" x1="1160" y1="22"  x2="1160" y2="58"/>
+      <line class="corner-h" x1="22"   y1="560" x2="58"   y2="560"/>
+      <line class="corner-v" x1="40"   y1="542" x2="40"   y2="578"/>
+      <line class="corner-h" x1="1142" y1="560" x2="1178" y2="560"/>
+      <line class="corner-v" x1="1160" y1="542" x2="1160" y2="578"/>
+      <line class="dim-line" x1="40"   y1="585" x2="1160" y2="585"/>
+      <line class="dim-tick" x1="40"   y1="578" x2="40"   y2="592"/>
+      <line class="dim-tick" x1="1160" y1="578" x2="1160" y2="592"/>
+      <line class="dim-line" x1="1178" y1="40"  x2="1178" y2="560"/>
+      <line class="dim-tick" x1="1171" y1="40"  x2="1185" y2="40"/>
+      <line class="dim-tick" x1="1171" y1="560" x2="1185" y2="560"/>
+
+      <rect   class="cut-path" x="40"  y="40"  width="280" height="130" clip-path="url(#clip-r1a)"/>
+      <rect   class="cut-path" x="320" y="40"  width="280" height="130" clip-path="url(#clip-r1b)"/>
+      <rect   class="cut-path" x="600" y="40"  width="280" height="130" clip-path="url(#clip-r1c)"/>
+      <rect   class="cut-path" x="880" y="40"  width="280" height="130" clip-path="url(#clip-r1d)"/>
+      <rect   class="cut-path" x="40"  y="170" width="320" height="130" clip-path="url(#clip-r2a)"/>
+      <rect   class="cut-path" x="360" y="170" width="320" height="130" clip-path="url(#clip-r2b)"/>
+      <rect   class="cut-path" x="680" y="170" width="200" height="130" clip-path="url(#clip-r2c)"/>
+      <circle class="cut-path" cx="1020" cy="235" r="60"               clip-path="url(#clip-c2)"/>
+      <rect   class="cut-path" x="40"  y="300" width="300" height="130" clip-path="url(#clip-r3a)"/>
+      <rect   class="cut-path" x="340" y="300" width="300" height="130" clip-path="url(#clip-r3b)"/>
+      <rect   class="cut-path" x="640" y="300" width="240" height="130" clip-path="url(#clip-r3c)"/>
+      <circle class="cut-path" cx="1020" cy="365" r="60"               clip-path="url(#clip-c3)"/>
+      <rect   class="cut-path" x="40"  y="430" width="560" height="130" clip-path="url(#clip-r4a)"/>
+      <rect   class="cut-path" x="600" y="430" width="560" height="130" clip-path="url(#clip-r4b)"/>
+
+      <g id="cnc-head" opacity="0">
+        <circle cx="0" cy="0" r="8"   fill="none" stroke="#fff" stroke-width="1.5" opacity="0.8"/>
+        <circle cx="0" cy="0" r="2.5" fill="#fff" opacity="0.95"/>
+        <line x1="-14" y1="0" x2="-9" y2="0" stroke="#fff" stroke-width="1" opacity="0.5"/>
+        <line x1="9"   y1="0" x2="14" y2="0" stroke="#fff" stroke-width="1" opacity="0.5"/>
+        <line x1="0" y1="-14" x2="0" y2="-9" stroke="#fff" stroke-width="1" opacity="0.5"/>
+        <line x1="0" y1="9"   x2="0" y2="14" stroke="#fff" stroke-width="1" opacity="0.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content-wrap">
+    <div class="hero-content">
+      <div class="hero-label">CNC nesting &amp; edgebanding &mdash; Aalsmeer</div>
+      <h1 class="hero-h1">Cut.<br>Edge.<br><span>Deliver.</span></h1>
+      <p class="hero-sub">Sheet material cut to your files. Edgebanding applied in-house. No file? We can draw it for you. Fast turnaround for trade and DIY clients across the Amsterdam region.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">Get a quote</a>
+        <a href="#services" class="btn-secondary">View services</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat reveal reveal-delay-1">
+      <div class="stat-num">48<span>h</span></div>
+      <div class="stat-label">Standard turnaround</div>
+    </div>
+    <div class="stat reveal reveal-delay-2">
+      <div class="stat-num">DXF <span>/</span> DWG</div>
+      <div class="stat-label">File formats accepted</div>
+    </div>
+    <div class="stat reveal reveal-delay-3">
+      <div class="stat-num">AMS<span>.</span></div>
+      <div class="stat-label">Collection &amp; delivery</div>
+    </div>
+  </div>
+</div>
+
+<section class="services" id="services">
+  <div class="section-inner">
+    <div class="section-label reveal">What we do</div>
+    <h2 class="section-h2 reveal">Two services. No fuss.</h2>
+    <div class="services-grid">
+      <div class="service-card reveal reveal-delay-1">
+        <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="26" height="26" stroke-dasharray="3 2"/>
+          <rect x="6" y="6" width="9" height="8"/>
+          <rect x="17" y="6" width="9" height="8"/>
+          <rect x="6" y="16" width="13" height="10"/>
+          <circle cx="24" cy="21" r="4"/>
+        </svg>
+        <div class="service-title">CNC nesting</div>
+        <div class="service-body">Upload your cut file and we'll nest and cut your parts from sheet material. MDF, plywood, melamine and more. Optimised for minimal waste.</div>
+        <a href="#contact" class="service-link">Get a quote</a>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="11" width="26" height="10"/>
+          <line x1="3" y1="11" x2="3" y2="21" stroke-width="3"/>
+          <line x1="29" y1="11" x2="29" y2="21" stroke-width="3"/>
+          <line x1="7" y1="15" x2="25" y2="15" stroke-dasharray="2 2"/>
+          <line x1="7" y1="18" x2="25" y2="18" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="service-title">Edgebanding</div>
+        <div class="service-body">ABS and PVC edgebanding applied to your panels in-house. Matched to your board or custom colour. Straight edges and radius work available.</div>
+        <a href="#contact" class="service-link">Get a quote</a>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <svg class="service-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="26" height="26"/>
+          <line x1="3" y1="13" x2="29" y2="13"/>
+          <line x1="13" y1="3" x2="13" y2="29"/>
+          <circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="21" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="21" cy="21" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+        <div class="service-title">No file? No problem.</div>
+        <div class="service-body">Don't have a cut file? We can draw it from your sketch, dimensions or photo. Combined cut and band jobs welcome — one conversation, one quote, one collection.</div>
+        <a href="#contact" class="service-link">Get in touch</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="process-inner">
+    <div class="process-label reveal">How it works</div>
+    <div class="process-steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <div class="step-title">Upload your file</div>
+        <div class="step-body">DXF, DWG or PDF. Include material spec and quantities.</div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <div class="step-title">We confirm &amp; quote</div>
+        <div class="step-body">Same day response. Clear pricing, no hidden costs.</div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <div class="step-title">We cut &amp; band</div>
+        <div class="step-body">Parts cut and edged in our Aalsmeer workshop. Quality checked before handover.</div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">04</div>
+        <div class="step-title">Collect or deliver</div>
+        <div class="step-body">Pick up from the studio or delivery across the Amsterdam region.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-strip" id="contact">
+  <div class="cta-inner">
+    <div class="cta-text reveal">Ready to cut?<br><span>Send us your file.</span></div>
+    <div class="cta-actions reveal reveal-delay-2">
+      <a href="#" onclick="window.location.href='mai'+'lto:info@ac'+'nc.nl';return false;" class="btn-primary">Email us</a>
+      <a href="tel:+31000000000" class="btn-secondary">Call us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="footer-logo">AC<span>NC</span></a>
+    <div class="footer-info">Andorraweg 5b, Aalsmeer<br>KVK 00000000 &middot; BTW NL000000000B00</div>
+  </div>
+</footer>
+
+<script>
+(function() {
+
+  /* Page load */
+  window.addEventListener('load', function() {
+    document.body.classList.add('loaded');
+    setTimeout(startCNC, 500);
+  });
+
+  /* CNC animation — clipPath reveal approach.
+     No stroke-dashoffset. No pathLength.
+     Each shape has a clipPath whose rect starts at w=0 h=0.
+     JS expands the clip rect to reveal the shape progressively.
+     The cutter head tracks the shape outline using pointAt(). */
+  function startCNC() {
+    var head = document.getElementById('cnc-head');
+    if (!head) return;
+
+    var speed = 0.7; /* SVG units per ms */
+
+    var seq = [
+      /* Each entry: clipId = id of <rect> inside <clipPath>
+         type = rect or circle
+         For rects:   x,y,w,h — position and size
+         For circles: cx,cy,r — centre and radius
+                      bx,by,bw,bh — bounding box for clip rect */
+      {clipId:'cr1a', type:'rect',   x:40,   y:40,  w:280, h:130},
+      {clipId:'cr1b', type:'rect',   x:320,  y:40,  w:280, h:130},
+      {clipId:'cr1c', type:'rect',   x:600,  y:40,  w:280, h:130},
+      {clipId:'cr1d', type:'rect',   x:880,  y:40,  w:280, h:130},
+      {clipId:'cr2a', type:'rect',   x:40,   y:170, w:320, h:130},
+      {clipId:'cr2b', type:'rect',   x:360,  y:170, w:320, h:130},
+      {clipId:'cr2c', type:'rect',   x:680,  y:170, w:200, h:130},
+      {clipId:'cc2',  type:'circle', cx:1020,cy:235, r:60,  bx:960,by:175,bw:120,bh:120},
+      {clipId:'cr3a', type:'rect',   x:40,   y:300, w:300, h:130},
+      {clipId:'cr3b', type:'rect',   x:340,  y:300, w:300, h:130},
+      {clipId:'cr3c', type:'rect',   x:640,  y:300, w:240, h:130},
+      {clipId:'cc3',  type:'circle', cx:1020,cy:365, r:60,  bx:960,by:305,bw:120,bh:120},
+      {clipId:'cr4a', type:'rect',   x:40,   y:430, w:560, h:130},
+      {clipId:'cr4b', type:'rect',   x:600,  y:430, w:560, h:130}
+    ];
+
+    function perim(s) {
+      return s.type === 'circle' ? 2 * Math.PI * s.r : 2 * (s.w + s.h);
+    }
+
+    function pointAt(s, t) {
+      if (s.type === 'circle') {
+        var a = -Math.PI / 2 + t * 2 * Math.PI;
+        return {x: s.cx + s.r * Math.cos(a), y: s.cy + s.r * Math.sin(a)};
+      }
+      var p = perim(s), d = t * p;
+      if (d <= s.w)         return {x: s.x + d,                 y: s.y};
+      if (d <= s.w + s.h)   return {x: s.x + s.w,               y: s.y + d - s.w};
+      if (d <= 2*s.w + s.h) return {x: s.x + s.w - (d-s.w-s.h), y: s.y + s.h};
+      return                       {x: s.x,                      y: s.y + s.h - (d - 2*s.w - s.h)};
+    }
+
+    var idx = 0;
+
+    function drawNext() {
+      if (idx >= seq.length) {
+        head.setAttribute('opacity', '0');
+        return;
+      }
+
+      var s    = seq[idx];
+      var clip = document.getElementById(s.clipId);
+
+      if (!clip) {
+        idx++;
+        drawNext();
+        return;
+      }
+
+      var len      = perim(s);
+      var duration = len / speed;
+      var bx = (s.type === 'circle') ? s.bx : s.x;
+      var by = (s.type === 'circle') ? s.by : s.y;
+      var bw = (s.type === 'circle') ? s.bw : s.w;
+      var bh = (s.type === 'circle') ? s.bh : s.h;
+
+      head.setAttribute('opacity', '1');
+      var t0 = null;
+
+      function frame(ts) {
+        if (!t0) { t0 = ts; }
+        var prog = (ts - t0) / duration;
+        if (prog > 1) { prog = 1; }
+
+        clip.setAttribute('x',      String(bx));
+        clip.setAttribute('y',      String(by));
+        clip.setAttribute('width',  String(bw * prog));
+        clip.setAttribute('height', String(bh * prog));
+
+        var pt = pointAt(s, prog);
+        head.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+
+        if (prog < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          clip.setAttribute('width',  String(bw));
+          clip.setAttribute('height', String(bh));
+          setTimeout(function() { idx++; drawNext(); }, 25);
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    /* Start head at first shape origin */
+    var p0 = pointAt(seq[0], 0);
+    head.setAttribute('transform', 'translate(' + p0.x + ',' + p0.y + ')');
+    head.setAttribute('opacity', '1');
+    setTimeout(drawNext, 100);
+  }
+
+  /* Scroll reveal */
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+  /* Mobile menu */
+  window.toggleMenu = function() {
+    var m = document.getElementById('mobile-menu');
+    m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+  };
+
+}());
+</script>
+</body>
+</html>
