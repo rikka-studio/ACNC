@@ -30,6 +30,7 @@ body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);ove
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
 .hero-drawing{position:absolute;top:50%;right:-18%;transform:translateY(-50%);width:80%;z-index:1;pointer-events:none}
 #cnc-svg{width:100%;height:auto}
+#cut-layer{opacity:0}
 .sheet-border{fill:none;stroke:rgba(123,179,240,0.18);stroke-width:0.75}
 .corner-h,.corner-v{stroke:rgba(123,179,240,0.35);stroke-width:1}
 .dim-line{stroke:rgba(123,179,240,0.1);stroke-width:0.5}
@@ -302,10 +303,17 @@ footer{background:#0a0a0a;padding:28px 0}
 <script>
 (function() {
 
-  window.addEventListener('load', function() {
+  function init() {
     document.body.classList.add('loaded');
-    setTimeout(startCNC, 500);
-  });
+    var layer = document.getElementById('cut-layer');
+    if (layer) { layer.setAttribute('opacity', '1'); }
+    setTimeout(startCNC, 300);
+  }
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
 
   /* =============================================================
      CNC ANIMATION
@@ -435,9 +443,17 @@ footer{background:#0a0a0a;padding:28px 0}
 
         var pt = pts[ptIdx];
 
-        /* Draw segment only if previous point exists AND we are in dash zone */
-        if (prevPt !== null && inDash(pt.d)) {
+        var ptInDash   = inDash(pt.d);
+        var prevInDash = prevPt !== null && inDash(prevPt.d);
+
+        if (prevPt !== null && ptInDash && prevInDash) {
+          /* Both points in dash zone — draw segment */
           drawSegment(prevPt, pt);
+        } else if (!ptInDash) {
+          /* Entering gap — clear prevPt so next dash starts fresh */
+          prevPt = null;
+          ptIdx++;
+          continue;
         }
 
         prevPt = pt;
