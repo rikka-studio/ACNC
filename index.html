@@ -153,6 +153,7 @@ footer{background:#0a0a0a;padding:28px 0}
     <svg id="cnc-svg" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
       <!-- Sheet aligned to 60px grid: x=60,y=60, 18x60=1080 wide, 8x60=480 tall -->
       <rect class="sheet-border" x="60" y="60" width="1080" height="480"/>
+      <!-- Crosshairs: each pair of lines meets exactly at the sheet corner -->
       <line class="corner-h" x1="44"   y1="60"  x2="76"   y2="60"/>
       <line class="corner-v" x1="60"   y1="44"  x2="60"   y2="76"/>
       <line class="corner-h" x1="1124" y1="60"  x2="1156" y2="60"/>
@@ -385,11 +386,11 @@ footer{background:#0a0a0a;padding:28px 0}
       {type:'rect',   x:60,   y:180, w:300, h:120},
       {type:'rect',   x:360,  y:180, w:300, h:120},
       {type:'rect',   x:660,  y:180, w:180, h:120},
-      {type:'circle', cx:1020, cy:240, r:54},
+      {type:'circle', cx:894, cy:240, r:54},
       {type:'rect',   x:60,   y:300, w:300, h:120},
       {type:'rect',   x:360,  y:300, w:270, h:120},
       {type:'rect',   x:630,  y:300, w:210, h:120},
-      {type:'circle', cx:1020, cy:360, r:54},
+      {type:'circle', cx:894, cy:360, r:54},
       {type:'rect',   x:60,   y:420, w:540, h:120},
       {type:'rect',   x:600,  y:420, w:540, h:120}
     ];
@@ -434,12 +435,15 @@ footer{background:#0a0a0a;padding:28px 0}
 
       for (var step = 0; step < SPEED; step++) {
         if (ptIdx >= pts.length) {
-          /* Move to next shape */
+          /* Move to next shape — reset prevPt so no line bridges shapes */
           shapeIdx++;
           ptIdx  = 0;
           prevPt = null;
           break;
         }
+
+        /* Also reset prevPt if we just switched shapes this iteration */
+        if (ptIdx === 0) { prevPt = null; }
 
         var pt = pts[ptIdx];
 
