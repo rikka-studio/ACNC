@@ -189,21 +189,23 @@ footer{background:#0a0a0a;padding:28px 0}
         <line class="grid-line" x1="0" y1="780" x2="1200" y2="780"/>
         <line class="grid-line" x1="0" y1="840" x2="1200" y2="840"/>
       </g>
-      <rect class="sheet-border" x="60" y="120" width="1080" height="480"/>
-      <line class="corner-h" x1="42"  y1="120" x2="78"  y2="120"/>
-      <line class="corner-v" x1="60"  y1="102" x2="60"  y2="138"/>
-      <line class="corner-h" x1="1122" y1="120" x2="1158" y2="120"/>
-      <line class="corner-v" x1="1140" y1="102" x2="1140" y2="138"/>
-      <line class="corner-h" x1="42"  y1="600" x2="78"  y2="600"/>
-      <line class="corner-v" x1="60"  y1="582" x2="60"  y2="618"/>
-      <line class="corner-h" x1="1122" y1="600" x2="1158" y2="600"/>
-      <line class="corner-v" x1="1140" y1="582" x2="1140" y2="618"/>
-      <line class="dim-line" x1="60"   y1="620" x2="1140" y2="620"/>
-      <line class="dim-tick" x1="60"   y1="614" x2="60"   y2="626"/>
-      <line class="dim-tick" x1="1140" y1="614" x2="1140" y2="626"/>
-      <line class="dim-line" x1="1160" y1="120" x2="1160" y2="600"/>
-      <line class="dim-tick" x1="1154" y1="120" x2="1166" y2="120"/>
-      <line class="dim-tick" x1="1154" y1="600" x2="1166" y2="600"/>
+      <!-- Sheet: all coords multiples of 14 so dashes align perfectly at corners -->
+      <!-- x=70(5*14) y=126(9*14) w=1120(80*14) h=448(32*14) -->
+      <rect class="sheet-border" x="70" y="126" width="1120" height="448"/>
+      <line class="corner-h" x1="52"  y1="126" x2="88"  y2="126"/>
+      <line class="corner-v" x1="70"  y1="108" x2="70"  y2="144"/>
+      <line class="corner-h" x1="1172" y1="126" x2="1208" y2="126"/>
+      <line class="corner-v" x1="1190" y1="108" x2="1190" y2="144"/>
+      <line class="corner-h" x1="52"  y1="574" x2="88"  y2="574"/>
+      <line class="corner-v" x1="70"  y1="556" x2="70"  y2="592"/>
+      <line class="corner-h" x1="1172" y1="574" x2="1208" y2="574"/>
+      <line class="corner-v" x1="1190" y1="556" x2="1190" y2="592"/>
+      <line class="dim-line" x1="70"   y1="594" x2="1190" y2="594"/>
+      <line class="dim-tick" x1="70"   y1="588" x2="70"   y2="600"/>
+      <line class="dim-tick" x1="1190" y1="588" x2="1190" y2="600"/>
+      <line class="dim-line" x1="1208" y1="126" x2="1208" y2="574"/>
+      <line class="dim-tick" x1="1202" y1="126" x2="1214" y2="126"/>
+      <line class="dim-tick" x1="1202" y1="574" x2="1214" y2="574"/>
       <g id="cut-layer"></g>
       <g id="cnc-head" opacity="0">
         <circle cx="0" cy="0" r="7"   fill="none" stroke="#fff" stroke-width="1.5" opacity="0.85"/>
@@ -330,139 +332,174 @@ footer{background:#0a0a0a;padding:28px 0}
     var SC    = 'rgba(123,179,240,0.72)';
     var SW    = '1.3';
 
-    function inDash(d) { return (d % UNIT) < DASH; }
-
-    /* Normalise a segment key so A->B and B->A produce the same string.
-       Always put the point with smaller x (or smaller y if x equal) first. */
-    function segKey(p1, p2) {
-      var ax = p1.x, ay = p1.y, bx = p2.x, by = p2.y;
-      if (ax > bx || (ax === bx && ay > by)) {
-        ax = p2.x; ay = p2.y; bx = p1.x; by = p1.y;
-      }
-      return ax.toFixed(1)+','+ay.toFixed(1)+'|'+bx.toFixed(1)+','+by.toFixed(1);
-    }
-
-    function sampleRect(x, y, w, h) {
-      var pts = [], p = 2*(w+h), n = Math.ceil(p);
-      for (var i = 0; i <= n; i++) {
-        var d = (i/n)*p, pt;
-        if      (d <= w)       pt = {x:x+d,          y:y,          d:d};
-        else if (d <= w+h)     pt = {x:x+w,           y:y+d-w,      d:d};
-        else if (d <= 2*w+h)   pt = {x:x+w-(d-w-h),  y:y+h,        d:d};
-        else                   pt = {x:x,             y:y+h-(d-2*w-h), d:d};
-        pts.push(pt);
-      }
-      return pts;
-    }
-
-    function sampleCircle(cx, cy, r) {
-      var pts = [], c = 2*Math.PI*r, n = Math.ceil(c);
-      for (var i = 0; i <= n; i++) {
-        var d = (i/n)*c, a = -Math.PI/2+(d/c)*2*Math.PI;
-        pts.push({x:cx+r*Math.cos(a), y:cy+r*Math.sin(a), d:d});
-      }
-      return pts;
-    }
-
     var shapes = [
-      {type:'rect',   x:60,  y:120, w:270, h:120},
-      {type:'rect',   x:330, y:120, w:270, h:120},
-      {type:'rect',   x:600, y:120, w:270, h:120},
-      {type:'rect',   x:870, y:120, w:270, h:120},
-      {type:'rect',   x:60,  y:240, w:852, h:120},
-      {type:'circle', cx:969,  cy:300, r:57},
-      {type:'circle', cx:1083, cy:300, r:57},
-      {type:'rect',   x:60,  y:360, w:322, h:120},
-      {type:'rect',   x:382, y:360, w:322, h:120},
-      {type:'rect',   x:704, y:360, w:322, h:120},
-      {type:'circle', cx:1083, cy:420, r:57},
-      {type:'rect',   x:60,  y:480, w:540, h:120},
-      {type:'rect',   x:600, y:480, w:540, h:120}
+      {type:'rect',   x:70,   y:126, w:280, h:112},
+      {type:'rect',   x:350,  y:126, w:280, h:112},
+      {type:'rect',   x:630,  y:126, w:280, h:112},
+      {type:'rect',   x:910,  y:126, w:280, h:112},
+      {type:'rect',   x:70,   y:238, w:896, h:112},
+      {type:'circle', cx:1022, cy:294, r:56},
+      {type:'circle', cx:1134, cy:294, r:56},
+      {type:'rect',   x:70,   y:350, w:336, h:112},
+      {type:'rect',   x:406,  y:350, w:336, h:112},
+      {type:'rect',   x:742,  y:350, w:336, h:112},
+      {type:'circle', cx:1134, cy:406, r:56},
+      {type:'rect',   x:70,   y:462, w:560, h:112},
+      {type:'rect',   x:630,  y:462, w:560, h:112}
     ];
 
-    var allPts = shapes.map(function(s) {
-      return s.type === 'circle'
-        ? sampleCircle(s.cx, s.cy, s.r)
-        : sampleRect(s.x, s.y, s.w, s.h);
-    });
+    function perim(s) {
+      return s.type === 'circle' ? 2*Math.PI*s.r : 2*(s.w+s.h);
+    }
 
-    /* Pre-build deduplicated segment set.
-       Walk every shape, collect all dash-zone segments,
-       normalise each key. This Set tells us what has been drawn. */
-    var drawnKeys = new Set ? new Set() : (function(){
-      var o = {}, has = function(k){ return !!o[k]; }, add = function(k){ o[k]=1; };
-      return {has:has, add:add};
-    }());
+    function posAt(s, d) {
+      if (s.type === 'circle') {
+        var c = 2*Math.PI*s.r;
+        var a = -Math.PI/2 + (d/c)*2*Math.PI;
+        return {x: s.cx+s.r*Math.cos(a), y: s.cy+s.r*Math.sin(a)};
+      }
+      var w=s.w,h=s.h,x=s.x,y=s.y;
+      if      (d<=w)       return {x:x+d,         y:y};
+      else if (d<=w+h)     return {x:x+w,          y:y+d-w};
+      else if (d<=2*w+h)   return {x:x+w-(d-w-h), y:y+h};
+      else                 return {x:x,            y:y+h-(d-2*w-h)};
+    }
 
-    function drawSeg(p1, p2) {
-      var key = segKey(p1, p2);
-      if (drawnKeys.has(key)) { return; }
-      drawnKeys.add(key);
-      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', p1.x.toFixed(1));
-      line.setAttribute('y1', p1.y.toFixed(1));
-      line.setAttribute('x2', p2.x.toFixed(1));
-      line.setAttribute('y2', p2.y.toFixed(1));
-      line.setAttribute('stroke', SC);
-      line.setAttribute('stroke-width', SW);
-      line.setAttribute('stroke-linecap', 'round');
+    /* Dedup by normalised integer key */
+    var drawn = {};
+    function segKey(x1,y1,x2,y2) {
+      var ax=Math.round(x1),ay=Math.round(y1),bx=Math.round(x2),by=Math.round(y2);
+      if (ax>bx||(ax===bx&&ay>by)){var t;t=ax;ax=bx;bx=t;t=ay;ay=by;by=t;}
+      return ax+','+ay+'|'+bx+','+by;
+    }
+
+    function drawSeg(x1,y1,x2,y2) {
+      var key=segKey(x1,y1,x2,y2);
+      if (drawn[key]) { return; }
+      drawn[key]=true;
+      var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',Math.round(x1));
+      line.setAttribute('y1',Math.round(y1));
+      line.setAttribute('x2',Math.round(x2));
+      line.setAttribute('y2',Math.round(y2));
+      line.setAttribute('stroke',SC);
+      line.setAttribute('stroke-width',SW);
+      line.setAttribute('stroke-linecap','round');
       layer.appendChild(line);
     }
 
-    var shapeIdx = 0, ptIdx = 0, prevPt = null;
-    var lastTime = null, accumDist = 0;
+    /* Generate dashes for a straight edge using COORDINATE-based phase.
+       Phase is anchored to the global coordinate (x or y) so any two
+       shapes sharing that edge always produce identical dash positions
+       regardless of which direction the cutter travels.
+       horiz=true: horizontal edge (phase from x), else vertical (phase from y) */
+    function edgeDashes(x1, y1, x2, y2, globalDist) {
+      var dashes = [];
+      var horiz = (Math.round(y1)===Math.round(y2));
+      if (horiz) {
+        var left  = Math.min(x1,x2);
+        var right = Math.max(x1,x2);
+        var y     = Math.round(y1);
+        /* First dash starts at nearest multiple of UNIT >= left */
+        var first = Math.ceil(left/UNIT)*UNIT;
+        for (var x=first; x+DASH<=right; x+=UNIT) {
+          /* dist along this edge from x1 */
+          var d = (x1<x2) ? (x-x1) : (x1-x-DASH);
+          dashes.push({x1:x,y1:y,x2:x+DASH,y2:y, dist:globalDist+Math.abs(d)});
+        }
+      } else {
+        var top    = Math.min(y1,y2);
+        var bottom = Math.max(y1,y2);
+        var x      = Math.round(x1);
+        var first  = Math.ceil(top/UNIT)*UNIT;
+        for (var yy=first; yy+DASH<=bottom; yy+=UNIT) {
+          var d = (y1<y2) ? (yy-y1) : (y1-yy-DASH);
+          dashes.push({x1:x,y1:yy,x2:x,y2:yy+DASH, dist:globalDist+Math.abs(d)});
+        }
+      }
+      return dashes;
+    }
 
-    head.setAttribute('opacity', '1');
-    var p0 = allPts[0][0];
-    head.setAttribute('transform', 'translate('+p0.x.toFixed(1)+','+p0.y.toFixed(1)+')');
+    /* For circles: use posAt-based dashes (circles have no shared edges) */
+    function circleDashes(s, globalDist) {
+      var dashes = [];
+      var p = perim(s);
+      for (var d=0; d+DASH<=p; d+=UNIT) {
+        var p1=posAt(s,d), p2=posAt(s,d+DASH);
+        dashes.push({x1:p1.x,y1:p1.y,x2:p2.x,y2:p2.y,dist:globalDist+d});
+      }
+      return dashes;
+    }
+
+    /* Build dash list for all shapes */
+    var allDashes = [];
+    var globalDist = 0;
+
+    shapes.forEach(function(s) {
+      var p = perim(s);
+      if (s.type==='circle') {
+        circleDashes(s, globalDist).forEach(function(d){allDashes.push(d);});
+      } else {
+        /* Rect: 4 edges in order: top, right, bottom, left */
+        var edges = [
+          {x1:s.x,      y1:s.y,      x2:s.x+s.w,  y2:s.y,      off:0},
+          {x1:s.x+s.w,  y1:s.y,      x2:s.x+s.w,  y2:s.y+s.h,  off:s.w},
+          {x1:s.x+s.w,  y1:s.y+s.h,  x2:s.x,      y2:s.y+s.h,  off:s.w+s.h},
+          {x1:s.x,      y1:s.y+s.h,  x2:s.x,      y2:s.y,      off:2*s.w+s.h}
+        ];
+        edges.forEach(function(e) {
+          edgeDashes(e.x1,e.y1,e.x2,e.y2, globalDist+e.off).forEach(function(d){
+            allDashes.push(d);
+          });
+        });
+      }
+      globalDist += p;
+    });
+
+    /* Sort by dist so cutter reveals in order */
+    allDashes.sort(function(a,b){return a.dist-b.dist;});
+
+    var totalDist = globalDist;
+
+    /* Head position */
+    var shapeStarts=[], acc=0;
+    shapes.forEach(function(s){shapeStarts.push(acc);acc+=perim(s);});
+    function headPos(dist) {
+      for (var i=shapes.length-1;i>=0;i--) {
+        if (dist>=shapeStarts[i]) {
+          return posAt(shapes[i], Math.min(dist-shapeStarts[i],perim(shapes[i])));
+        }
+      }
+      return posAt(shapes[0],0);
+    }
+
+    var currentDist=0, lastTime=null, dashIdx=0;
+    head.setAttribute('opacity','1');
+    var h0=headPos(0);
+    head.setAttribute('transform','translate('+Math.round(h0.x)+','+Math.round(h0.y)+')');
 
     function frame(ts) {
-      if (shapeIdx >= allPts.length) { head.setAttribute('opacity','0'); return; }
+      if (lastTime===null){lastTime=ts;}
+      var dt=Math.min(ts-lastTime,100); lastTime=ts;
+      currentDist+=(SPEED/1000)*dt;
+      if (currentDist>totalDist){currentDist=totalDist;}
 
-      if (lastTime === null) { lastTime = ts; }
-      var dt = Math.min(ts - lastTime, 100);
-      lastTime = ts;
-      accumDist += (SPEED / 1000) * dt;
-      var steps = Math.floor(accumDist);
-      accumDist -= steps;
-
-      for (var i = 0; i < steps; i++) {
-        if (shapeIdx >= allPts.length) { break; }
-        var pts = allPts[shapeIdx];
-
-        if (ptIdx >= pts.length) {
-          shapeIdx++;
-          ptIdx = 0;
-          prevPt = null;
-          if (shapeIdx >= allPts.length) { break; }
-          pts = allPts[shapeIdx];
-        }
-
-        var pt = pts[ptIdx];
-
-        if (inDash(pt.d)) {
-          if (prevPt !== null) {
-            drawSeg(prevPt, pt);
-          }
-          prevPt = pt;
-        } else {
-          prevPt = null;
-        }
-
-        ptIdx++;
+      while (dashIdx<allDashes.length && allDashes[dashIdx].dist<=currentDist) {
+        var d=allDashes[dashIdx];
+        drawSeg(d.x1,d.y1,d.x2,d.y2);
+        dashIdx++;
       }
 
-      /* Head always follows actual current position — no jumping */
-      if (shapeIdx < allPts.length) {
-        var cur = allPts[shapeIdx][Math.min(ptIdx, allPts[shapeIdx].length - 1)];
-        head.setAttribute('transform', 'translate('+cur.x.toFixed(1)+','+cur.y.toFixed(1)+')');
-      }
+      var hp=headPos(currentDist);
+      head.setAttribute('transform','translate('+Math.round(hp.x)+','+Math.round(hp.y)+')');
 
-      requestAnimationFrame(frame);
+      if (currentDist<totalDist) { requestAnimationFrame(frame); }
+      else { head.setAttribute('opacity','0'); }
     }
 
     requestAnimationFrame(frame);
   }
+
 
   var obs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
