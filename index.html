@@ -6,16 +6,18 @@
 <title>ACNC — CNC Nesting & Edgebanding, Aalsmeer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Iceland&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--blue:#0f3d8c;--blue-light:#7bb3f0;--ink:#1a1a1a;--mid:#666;--line:rgba(255,255,255,0.08);--paper:#f4f4f2;--max:1400px}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden}
-#acnc-nav{position:fixed;top:0;left:0;right:0;height:64px;background:var(--blue);z-index:100;display:flex;align-items:center;justify-content:center}
+#acnc-nav{position:fixed;top:0;left:0;right:0;height:100px;background:var(--blue);z-index:100;display:flex;align-items:center;justify-content:center}
 .nav-inner{max-width:var(--max);width:100%;padding:0 48px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-size:22px;font-weight:800;letter-spacing:0.1em;color:#fff;text-decoration:none}
-.nav-logo span{color:var(--blue-light)}
+.nav-logo{text-decoration:none;display:flex;gap:4px;align-items:center}
+.nav-logo .lbox{width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-family:'Iceland',sans-serif;font-size:32px;line-height:1}
+.lbox-w{background:#ffffff;color:#0f3d8c}
+.lbox-b{background:#7bb3f0;color:#0f3d8c}
 .nav-links{display:flex;align-items:center;gap:36px}
 .nav-links a{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.65);text-decoration:none;transition:color 0.25s}
 .nav-links a:hover{color:#fff}
@@ -91,8 +93,8 @@ body.loaded .hero-label,body.loaded .hero-h1,body.loaded .hero-sub,body.loaded .
 .cta-actions{display:flex;gap:12px;flex-shrink:0}
 footer{background:#0a0a0a;padding:28px 0}
 .footer-inner{max-width:var(--max);margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.footer-logo{font-size:16px;font-weight:800;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-decoration:none}
-.footer-logo span{color:rgba(123,179,240,0.45)}
+.footer-logo{text-decoration:none;display:flex;gap:2px;align-items:center}
+.footer-logo .lbox{width:26px;height:26px;font-family:'Iceland',sans-serif;font-size:15px;opacity:0.4}
 .footer-info{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;text-align:right;line-height:1.7}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
@@ -103,6 +105,8 @@ footer{background:#0a0a0a;padding:28px 0}
   .nav-inner{padding:0 24px}
   .nav-links{display:none}
   #nav-burger{display:flex}
+  #acnc-nav{height:76px}
+  .nav-logo .lbox{width:40px;height:40px;font-size:23px}
   .hero-content-wrap{padding:0 24px}
   .hero-h1{font-size:52px}
   .hero-drawing{opacity:0.3}
@@ -128,7 +132,7 @@ footer{background:#0a0a0a;padding:28px 0}
 
 <nav id="acnc-nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo">AC<span>NC</span></a>
+    <a href="/" class="nav-logo"><div class="lbox lbox-w">A</div><div class="lbox lbox-b">C</div><div class="lbox lbox-b">N</div><div class="lbox lbox-b">C</div></a>
     <div class="nav-links">
       <a href="#services">Services</a>
       <a href="#process">How it works</a>
@@ -299,7 +303,7 @@ footer{background:#0a0a0a;padding:28px 0}
 
 <footer>
   <div class="footer-inner">
-    <a href="/" class="footer-logo">AC<span>NC</span></a>
+    <a href="/" class="footer-logo"><div class="lbox lbox-w">A</div><div class="lbox lbox-b">C</div><div class="lbox lbox-b">N</div><div class="lbox lbox-b">C</div></a>
     <div class="footer-info">Andorraweg 5b, Aalsmeer<br>KVK 00000000 &middot; BTW NL000000000B00</div>
   </div>
 </footer>
@@ -476,3 +480,4 @@ footer{background:#0a0a0a;padding:28px 0}
 </script>
 </body>
 </html>
+
